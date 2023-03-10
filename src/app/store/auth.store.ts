@@ -1,3 +1,4 @@
+import { JsonPipe } from "@angular/common";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, map, Observable } from "rxjs";
 import { Auth } from "../model/auth.model";
@@ -20,6 +21,12 @@ export class AuthStore {
     this.isNotAuthorized$ = this.isAuthorized$.pipe(
       map((authorized) => !authorized)
     );
+
+    const data = localStorage.getItem(AUTH_DATA);
+
+    if(data){
+        this.subject.next(JSON.parse(data));
+    }
   }
 
   storeAuth(data: Auth) {
