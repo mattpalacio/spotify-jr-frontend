@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { exhaustMap, of } from 'rxjs';
+import { AuthStore } from './store/auth.store';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +10,7 @@ import { exhaustMap, of } from 'rxjs';
   styles: []
 })
 export class AppComponent implements OnInit {
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router, private auth: AuthStore) {}
 
   ngOnInit(): void {
     const code = new URLSearchParams(window.location.search).get('code');
@@ -19,10 +20,11 @@ export class AppComponent implements OnInit {
 
       this.http
         .get(url)
-        .pipe(exhaustMap((data) => of(data)))
+        .pipe(
+          exhaustMap((data) => of(data)))
         .subscribe({
           next: (data) => {
-            console.log(data);
+            this.auth.storeAuth(data);
           },
           error: () => this.router.navigateByUrl('/login'),
           complete: () => window.history.replaceState({}, '', '/')
