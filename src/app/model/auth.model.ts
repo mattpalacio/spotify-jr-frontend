@@ -1,7 +1,7 @@
 export interface Auth {
-    accessToken: string;
-    expires: number;
-    refreshToken: string;
+    access_token: string;
+    expires_in: number;
+    refresh_token: string;
     scope: string;
-    tokenType: string;
+    token_type: string;
 }

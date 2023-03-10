@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { exhaustMap, of } from 'rxjs';
+import { Auth } from './model/auth.model';
 import { AuthStore } from './store/auth.store';
 
 @Component({
@@ -19,7 +20,7 @@ export class AppComponent implements OnInit {
       const url = 'http://127.0.0.1:8000/login?code=' + code;
 
       this.http
-        .get(url)
+        .get<Auth>(url)
         .pipe(
           exhaustMap((data) => of(data)))
         .subscribe({
