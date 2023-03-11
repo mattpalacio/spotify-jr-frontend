@@ -28,7 +28,7 @@ export class AppComponent implements OnInit {
             this.auth.storeAuth(data);
           },
           error: () => this.router.navigateByUrl('/login'),
-          complete: () => window.history.replaceState({}, '', '/')
+          complete: () => this.router.navigateByUrl('/home')
         });
     }
   }

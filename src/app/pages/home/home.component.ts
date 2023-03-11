@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
   selector: 'app-home',
   standalone: true,
   template: `
-    <p>
-      home works!
-    </p>
+    <div>
+      home page works
+    </div>
   `,
   styles: [
   ]

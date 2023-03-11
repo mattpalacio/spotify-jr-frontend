@@ -1,0 +1,139 @@
+button.login {
+    padding: 0.5rem 1rem;
+    border: none; 
+    border-radius: 0.1rem; 
+    background-color: rebeccapurple; 
+    color: pink; text-transform: 
+    uppercase; cursor: pointer; 
+    transform: scale(0.95); 
+    transition: 150ms ease-in-out
+}
+
+button.login:hover {
+    transform: scale(1);
+    box-shadow: 4px 4px 0 0 rgb(0 0 0 / 1);
+}
+
+button.login:active {
+    transform: scale(0.95); 
+    box-shadow: none
+}
+
+.button-container {
+    position: fixed; 
+    left: 50%; 
+    top:50%; 
+    transform: translate(-50%, -50%); 
+    z-index: 999
+}
+
+.animation-container {
+    background: linear-gradient(to left, #7600bc, #a000c8 ); 
+    width: 100%; 
+    height: 100vh;
+}
+
+.shapes {
+    position: absolute; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    overflow: hidden
+}
+@keyframes animate { 
+    0% { 
+        opacity: .5; 
+        border-radius: 0; 
+        transform: translateY(0) rotate(0deg);
+    } 100% {
+        opacity: 0; 
+        border-radius: 50%; 
+        transform: translateY(-1000px) rotate(720deg);}
+}
+
+.shapes div{
+    position: absolute; 
+    display: block; 
+    list-style: none; 
+    width: 20px; 
+    height:20px; 
+    background: rgba(255, 255, 255, 0.2); 
+    bottom: -150px; 
+    animation: animate 25s linear infinite
+}
+
+.shapes div:nth-child(1) { 
+    left: 25%; 
+    width: 80px; 
+    height: 80px; 
+    animation-delay: 0s
+}
+
+.shapes div:nth-child(2) {
+    left: 10%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 12s;
+    animation-duration: 12s;
+}
+
+.shapes div:nth-child(3) {
+    left: 70%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 4s;
+}
+
+.shapes div:nth-child(4) {
+    left: 40%; 
+    width: 60px; 
+    height: 60px; 
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
+
+.shapes div:nth-child(5) {
+    left: 65%; 
+    width: 20px; 
+    height: 20px; 
+    animation-delay: 0s;
+}
+
+.shapes div:nth-child(6) {
+    left: 75%; 
+    width: 110px; 
+    height: 110px; 
+    animation-delay: 3s;
+}
+
+.shapes div:nth-child(7) {
+    left: 35%; 
+    width: 150px; 
+    height: 150px; 
+    animation-delay: 7s;
+}
+
+.shapes div:nth-child(8) {
+    left: 45%; 
+    width: 25px; 
+    height: 25px; 
+    animation-delay: 15s;
+    animation-duration: 45s;
+}
+
+.shapes div:nth-child(9) {
+    left: 20%; 
+    width: 15px; 
+    height: 15px; 
+    animation-delay: 2s;
+    animation-duration: 35s;
+}
+
+.shapes div:nth-child(10) {
+    left: 85%; 
+    width: 120px; 
+    height: 120px; 
+    animation-delay: 0s;
+    animation-duration: 18s;
+}
