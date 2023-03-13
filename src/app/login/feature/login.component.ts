@@ -7,7 +7,9 @@ import { CommonModule } from "@angular/common";
   imports: [CommonModule],
   template: `
   <div class="button-container">
-    <button (click)="getCode()" class="login">Let's Go!</button>
+    <button (click)="getCode()" class="login">
+      Let's Go!
+    </button>
   </div>
     <div class="animation-container">
       <div class="shapes">

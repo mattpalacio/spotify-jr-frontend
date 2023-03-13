@@ -1,23 +1,30 @@
 button.login {
     padding: 0.5rem 1rem;
-    border: none; 
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    height: 100px;
+    width: 200px;
     border-radius: 0.1rem; 
-    background-color: rebeccapurple; 
-    color: pink; text-transform: 
+    border: 2px solid #b04c7a;
+    background-color: #0095a0; 
+    color: #f5d5e4; text-transform: 
     uppercase; cursor: pointer; 
-    transform: scale(0.95); 
-    transition: 150ms ease-in-out
+    transition: 150ms ease-in-out;
+    transform: skewX(-15deg);
+    box-shadow: 10px 10px 0 0 #FBC638;
 }
 
 button.login:hover {
-    transform: scale(1);
-    box-shadow: 4px 4px 0 0 rgb(0 0 0 / 1);
+    transition: 0.5s;
+    transform: skewX(-15deg);
+    box-shadow: 17px 17px 0 0 #FBC638;
 }
 
-button.login:active {
+ button.login:active {
     transform: scale(0.95); 
-    box-shadow: none
-}
+    box-shadow: none;
+} 
 
 .button-container {
     position: fixed; 
@@ -25,7 +32,7 @@ button.login:active {
     top:50%; 
     transform: translate(-50%, -50%); 
     z-index: 999
-}
+} 
 
 .animation-container {
     background: linear-gradient(to left, #7600bc, #a000c8 ); 
@@ -67,7 +74,8 @@ button.login:active {
     left: 25%; 
     width: 80px; 
     height: 80px; 
-    animation-delay: 0s
+    animation-delay: 0s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(2) {
@@ -76,6 +84,7 @@ button.login:active {
     height: 20px; 
     animation-delay: 12s;
     animation-duration: 12s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(3) {
@@ -83,6 +92,7 @@ button.login:active {
     width: 20px; 
     height: 20px; 
     animation-delay: 4s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(4) {
@@ -91,6 +101,7 @@ button.login:active {
     height: 60px; 
     animation-delay: 0s;
     animation-duration: 18s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(5) {
@@ -98,6 +109,7 @@ button.login:active {
     width: 20px; 
     height: 20px; 
     animation-delay: 0s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(6) {
@@ -105,13 +117,15 @@ button.login:active {
     width: 110px; 
     height: 110px; 
     animation-delay: 3s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(7) {
     left: 35%; 
     width: 150px; 
     height: 150px; 
-    animation-delay: 7s;
+    animation-delay: 2s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(8) {
@@ -120,6 +134,7 @@ button.login:active {
     height: 25px; 
     animation-delay: 15s;
     animation-duration: 45s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(9) {
@@ -128,6 +143,7 @@ button.login:active {
     height: 15px; 
     animation-delay: 2s;
     animation-duration: 35s;
+    border: 2px solid yellow;
 }
 
 .shapes div:nth-child(10) {
@@ -136,4 +152,5 @@ button.login:active {
     height: 120px; 
     animation-delay: 0s;
     animation-duration: 18s;
+    border: 2px solid yellow;
 }
