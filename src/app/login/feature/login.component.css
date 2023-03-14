@@ -1,34 +1,28 @@
-button.login {
-  padding: 1rem 1.5rem;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
-  font-size: 20px;
-  border-radius: 0.1rem;
-  border: none;
-  background-color: #0095a0;
-  color: #f5d5e4;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: 150ms ease-in-out;
-  transform: skewX(-15deg);
-  box-shadow: 10px 10px 0 0 #004f55;
-}
-
-button.login:hover {
-  transition: 0.5s;
-  transform: skewX(-15deg);
-  box-shadow: 17px 17px 0 0 #004f55;
-}
-
-button.login:active {
-  transform: scale(0.95);
-  box-shadow: none;
-}
-
 .button-container {
   margin: 20px;
   z-index: 999;
   text-align: center;
+}
+
+button.login {
+  padding: 20px;
+  border-radius: 30px;
+  color: white;
+  background-color: #0095a0;
+  border: none;
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-size: 20px;
+  box-shadow: 0 10px 0 0 #004f55
+}
+
+button.login:hover {
+  cursor: pointer; 
+}
+
+button.login:active {
+  transform: translateY(4px);
+  box-shadow: 0 5px 0 0 #004f55;
 }
 
 .background-overlay {
@@ -53,10 +47,16 @@ button.login:active {
   top: 90px;
   left: 0;
   right: 0;
+  letter-spacing: .5px;
+}
+
+h4 {
+  letter-spacing: 1px;
 }
 
 p {
   width: 50ch;
+  line-height: 1.5;
 }
 
 .shapes {
