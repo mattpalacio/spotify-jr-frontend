@@ -6,6 +6,20 @@ import { CommonModule } from "@angular/common";
   standalone: true,
   imports: [CommonModule],
   template: `
+  <!-- i hate this for the animation, how can I simplfy this -->
+  <div class="shapes">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    
     <div class="background-overlay"></div>
     <div class="flex-container">
       <div>
@@ -24,22 +38,11 @@ import { CommonModule } from "@angular/common";
         </p>
       </div>
       <div class="button-container">
-        <button (click)="getCode()" class="login">Let's Groove</button>
+        <button (click)="getCode()" class="login" type="button">Let's Groove</button>
       </div>
     </div>
 
-      <div class="shapes">
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-        <div></div>
-      </div>
+    
   `,
   styleUrls: ["./login.component.css"],
 

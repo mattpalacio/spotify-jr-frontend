@@ -1,5 +1,5 @@
-import { JsonPipe } from "@angular/common";
 import { Injectable } from "@angular/core";
+import { Router } from "@angular/router";
 import { BehaviorSubject, map, Observable } from "rxjs";
 import { Auth } from "../model/auth.model";
 
@@ -15,7 +15,7 @@ export class AuthStore {
   isAuthorized$: Observable<boolean>;
   isNotAuthorized$: Observable<boolean>;
 
-  constructor() {
+  constructor(private router: Router) {
     this.isAuthorized$ = this.authData$.pipe(map((auth) => !!auth));
 
     this.isNotAuthorized$ = this.isAuthorized$.pipe(
@@ -37,5 +37,7 @@ export class AuthStore {
   logout() {
     this.subject.next(null);
     localStorage.removeItem(AUTH_DATA);
+    this.router.navigateByUrl('/login')
+    
   }
 }
