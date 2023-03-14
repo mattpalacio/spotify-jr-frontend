@@ -8,12 +8,12 @@ button.login {
   padding: 20px;
   border-radius: 30px;
   color: white;
-  background-color: #0095a0;
+  background-color: #52ab98;
   border: none;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 20px;
-  box-shadow: 0 10px 0 0 #004f55
+  box-shadow: 0 10px 0 0 #3c7c6e;
 }
 
 button.login:hover {
@@ -22,13 +22,14 @@ button.login:hover {
 
 button.login:active {
   transform: translateY(4px);
-  box-shadow: 0 5px 0 0 #004f55;
+  box-shadow: 0 5px 0 0 #346b5f;
 }
 
 .background-overlay {
   width: 100%;
   height: 50rem;
-  background: linear-gradient(135deg, #c34da0, #e87cc8);
+  background: linear-gradient(135deg, #eb6b40, #9b45b2); 
+  /* #7600bc, #a000c8*/
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   border-bottom-left-radius: 50%;
@@ -51,7 +52,7 @@ button.login:active {
 }
 
 h4 {
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
 
 p {
@@ -86,7 +87,7 @@ p {
   list-style: none;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #c34da0, #e87cc8);
+  background: linear-gradient(135deg, #eb6b40, #9b45b2);
   bottom: -150px;
   animation: animate 25s linear infinite;
 }
