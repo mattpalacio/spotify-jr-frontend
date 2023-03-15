@@ -5,7 +5,7 @@ import { CommonModule, NgFor } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Items, TrackData } from "src/app/model/track.model";
 import { Observable } from "rxjs";
-import { MusicStore } from "src/app/store/music-store.store";
+import { MusicStore } from "src/app/store/music.store";
 
 
 @Component({
@@ -21,7 +21,7 @@ import { MusicStore } from "src/app/store/music-store.store";
       </div>
       <div class="music-player-container">
         <ng-container *ngIf="tracks$ | async as tracks">
-          <ng-container *ngFor="let track of tracks.items">
+          <ng-container *ngFor="let track of tracks.tracks.items">
             <p>{{track.name}}</p>
           </ng-container>
         </ng-container>
@@ -40,16 +40,17 @@ import { MusicStore } from "src/app/store/music-store.store";
 })
 export class HomeComponent {
   deviceId: string | null = null;
-  tracks$: Observable<TrackData>;
+  tracks$: Observable<any>;
   constructor(private http: HttpClient, private musicStore: MusicStore) {}
 
   ngOnInit(): void {
     this.getDevices();
+    this.tracks$ = this.musicStore.loadTracks();
   }
 
   
   search(trackName: string) {
-    this.musicStore.getTracks(trackName).subscribe();
+    this.musicStore.getTracks(trackName);
     console.log(this.tracks$);
   }
   

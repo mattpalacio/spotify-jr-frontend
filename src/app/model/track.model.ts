@@ -7,7 +7,7 @@ export interface TrackData {
     previous: number | null;
     total: number; 
 }
-
+0
 export interface Items {
     album: Album;
     duration_ms: number;
