@@ -3,6 +3,9 @@ import { HeaderComponent } from "src/app/header/header.component";
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule, NgFor } from "@angular/common";
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
+import { Items, TrackData } from "src/app/model/track.model";
+import { Observable } from "rxjs";
+import { MusicStore } from "src/app/store/music-store.store";
 
 
 @Component({
@@ -13,20 +16,15 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
     <app-header></app-header>
     <div class="container">
       <div class="search-bar-container">
-        <input type="text" class="search" placeholder="Search Tracks" />
-        <button class="search"><mat-icon>search</mat-icon></button>
+        <input type="text" class="search" placeholder="Search Tracks" #searchInput/>
+        <button class="search"><mat-icon (click)="search(searchInput.value)">search</mat-icon></button>
       </div>
       <div class="music-player-container">
-      <button (click)="search()">Search</button>
-      <button (click)="getDevices()">Get devices</button>
-      <button (click)="play()">Play</button>
-      <button (click)="pause()">Pause</button>
-      <button (click)="transfer()">Transfer</button>
-        <!-- <table *ngFor="let track of tracks">
-          <tr>
-            <td>{{track.track}}</td>
-          </tr>
-        </table> -->
+        <ng-container *ngIf="tracks$ | async as tracks">
+          <ng-container *ngFor="let track of tracks.items">
+            <p>{{track.name}}</p>
+          </ng-container>
+        </ng-container>
       </div>
     </div>
   `,
@@ -42,29 +40,36 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 })
 export class HomeComponent {
   deviceId: string | null = null;
-  constructor(private http: HttpClient) {}
+  tracks$: Observable<TrackData>;
+  constructor(private http: HttpClient, private musicStore: MusicStore) {}
 
   ngOnInit(): void {
     this.getDevices();
   }
 
-  search(): void {
-    const url = 'http://127.0.0.1:8000/search';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
-    const params = new HttpParams({
-      fromObject: {
-        q: 'track:Lvl',
-        type: 'track'
-      }
-    });
-
-    this.http.get(url, { headers, params }).subscribe((data) => {
-      console.log(data);
-    });
+  
+  search(trackName: string) {
+    this.musicStore.getTracks(trackName).subscribe();
+    console.log(this.tracks$);
   }
+  
+  // search(): void {
+  //   const url = 'http://127.0.0.1:8000/search';
+  //   const headers = new HttpHeaders({
+  //     Authorization:
+  //       'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
+  //   });
+  //   const params = new HttpParams({
+  //     fromObject: {
+  //       q: 'track:Lvl',
+  //       type: 'track'
+  //     }
+  //   });
+
+  //   this.http.get(url, { headers, params }).subscribe((data) => {
+  //     console.log(data);
+  //   });
+  // }
 
   play(): void {
     const url = 'http://127.0.0.1:8000/player/play';
