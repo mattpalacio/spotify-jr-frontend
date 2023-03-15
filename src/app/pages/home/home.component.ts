@@ -20,6 +20,9 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements AfterViewInit {
   deviceId: string | null = null;
+  trackUri: string | null = null;
+  trackProgress = 0;
+
   constructor(private http: HttpClient) {}
 
   // ngOnInit(): void {}
@@ -95,7 +98,7 @@ export class HomeComponent implements AfterViewInit {
     });
     const params = new HttpParams({
       fromObject: {
-        q: 'track:Lvl',
+        q: 'track:Casio',
         type: 'track'
       }
     });
@@ -117,8 +120,8 @@ export class HomeComponent implements AfterViewInit {
       }
     });
     const body = {
-      uris: ['spotify:track:787rCZF9i4L1cXGMkdyIk4']
-      // position_ms: 0
+      uris: [this.trackUri],
+      position_ms: this.trackProgress
     };
 
     this.http.put(url, body, { headers, params }).subscribe();
@@ -176,8 +179,9 @@ export class HomeComponent implements AfterViewInit {
         'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
     });
 
-    this.http.get(url, { headers }).subscribe((data) => {
-      console.log(data);
+    this.http.get<any>(url, { headers }).subscribe((data) => {
+      this.trackUri = data.item.uri;
+      this.trackProgress = data.progress_ms;
     });
   }
 
