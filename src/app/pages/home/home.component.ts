@@ -1,5 +1,6 @@
+///  <reference types="@types/spotify-web-playback-sdk"/>
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-home',
@@ -17,13 +18,14 @@ import { Component, OnInit } from '@angular/core';
     '.container { background: linear-gradient(to left, #7600bc, #a000c8 ); width: 100%; height: 100vh;}'
   ]
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements AfterViewInit {
   deviceId: string | null = null;
   constructor(private http: HttpClient) {}
 
-  ngOnInit(): void {
-    this.getDevices();
-    console.log(window);
+  // ngOnInit(): void {}
+  // this.getDevices();
+  ngAfterViewInit(): void {
+    this.initPlaybackSDK();
   }
 
   async initPlaybackSDK() {
@@ -40,19 +42,25 @@ export class HomeComponent implements OnInit {
       volume: 1
     });
 
-    player.addListener('initialization_error', ({ message }) => {
+    player.addListener(
+      'initialization_error',
+      ({ message }: { message: string }) => {
+        console.error(message);
+      }
+    );
+
+    player.addListener(
+      'authentication_error',
+      ({ message }: { message: string }) => {
+        console.error(message);
+      }
+    );
+
+    player.addListener('account_error', ({ message }: { message: string }) => {
       console.error(message);
     });
 
-    player.addListener('authentication_error', ({ message }) => {
-      console.error(message);
-    });
-
-    player.addListener('account_error', ({ message }) => {
-      console.error(message);
-    });
-
-    player.addListener('playback_error', ({ message }) => {
+    player.addListener('playback_error', ({ message }: { message: string }) => {
       alert(
         `Your account has to have Spotify Premium for playing music ${message}`
       );
@@ -60,12 +68,13 @@ export class HomeComponent implements OnInit {
 
     player.addListener(
       'player_state_changed',
+
       (state: Spotify.PlaybackState) => {
         console.log(state);
       }
     );
 
-    player.addListener('ready', ({ device_id }) => {
+    player.addListener('ready', ({ device_id }: { device_id: string }) => {
       console.log('[Not-ify] Ready with Device ID', device_id);
 
       this.transfer(device_id);
