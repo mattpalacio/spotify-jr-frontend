@@ -1,6 +1,8 @@
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { of } from 'rxjs';
+import { exhaustMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
@@ -8,10 +10,8 @@ import { AfterViewInit, Component, OnInit } from '@angular/core';
   template: `
     <div class="container">
       <button (click)="search()">Search</button>
-      <button (click)="getDevices()">Get devices</button>
       <button (click)="play()">Play</button>
       <button (click)="pause()">Pause</button>
-      <button (click)="getCurrentlyPlaying()">Currently Playing</button>
     </div>
   `,
   styles: [
@@ -74,11 +74,14 @@ export class HomeComponent implements AfterViewInit {
 
       (state: Spotify.PlaybackState) => {
         console.log(state);
+        this.getCurrentlyPlaying();
       }
     );
 
     player.addListener('ready', ({ device_id }: { device_id: string }) => {
       console.log('[Not-ify] Ready with Device ID', device_id);
+
+      this.deviceId = device_id;
 
       this.transfer(device_id);
     });
@@ -103,8 +106,9 @@ export class HomeComponent implements AfterViewInit {
       }
     });
 
-    this.http.get(url, { headers, params }).subscribe((data) => {
-      console.log(data);
+    this.http.get<any>(url, { headers, params }).subscribe((data) => {
+      this.trackUri = data.tracks.items[0].uri;
+      this.trackProgress = 0;
     });
   }
 
@@ -128,6 +132,8 @@ export class HomeComponent implements AfterViewInit {
   }
 
   pause(): void {
+    this.getCurrentlyPlaying();
+
     const url = 'http://127.0.0.1:8000/player/pause';
     const headers = new HttpHeaders({
       Authorization:
@@ -167,9 +173,7 @@ export class HomeComponent implements AfterViewInit {
       play: true
     };
 
-    this.http.put(url, body, { headers }).subscribe((data) => {
-      console.log(data);
-    });
+    this.http.put(url, body, { headers }).subscribe();
   }
 
   getCurrentlyPlaying(): void {
@@ -179,10 +183,13 @@ export class HomeComponent implements AfterViewInit {
         'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
     });
 
-    this.http.get<any>(url, { headers }).subscribe((data) => {
-      this.trackUri = data.item.uri;
-      this.trackProgress = data.progress_ms;
-    });
+    this.http
+      .get<any>(url, { headers })
+      .pipe(exhaustMap((data) => of(data)))
+      .subscribe((data) => {
+        this.trackUri = data.item.uri;
+        this.trackProgress = data.progress_ms;
+      });
   }
 
   private waitForSpotifyWebPlaybackSDKToLoad(): Promise<typeof Spotify> {
