@@ -10,7 +10,7 @@ import { Component, OnInit } from '@angular/core';
       <button (click)="getDevices()">Get devices</button>
       <button (click)="play()">Play</button>
       <button (click)="pause()">Pause</button>
-      <button (click)="transfer()">Transfer</button>
+      <button (click)="getCurrentlyPlaying()">Currently Playing</button>
     </div>
   `,
   styles: [
@@ -23,6 +23,59 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.getDevices();
+    console.log(window);
+  }
+
+  async initPlaybackSDK() {
+    const accessToken = JSON.parse(
+      localStorage.getItem('auth_data')!
+    ).access_token;
+    const { Player } = await this.waitForSpotifyWebPlaybackSDKToLoad();
+
+    const player = new Player({
+      name: 'Not-ify Web Player',
+      getOAuthToken: (cb: any) => {
+        cb(accessToken);
+      },
+      volume: 1
+    });
+
+    player.addListener('initialization_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener('authentication_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener('account_error', ({ message }) => {
+      console.error(message);
+    });
+
+    player.addListener('playback_error', ({ message }) => {
+      alert(
+        `Your account has to have Spotify Premium for playing music ${message}`
+      );
+    });
+
+    player.addListener(
+      'player_state_changed',
+      (state: Spotify.PlaybackState) => {
+        console.log(state);
+      }
+    );
+
+    player.addListener('ready', ({ device_id }) => {
+      console.log('[Not-ify] Ready with Device ID', device_id);
+
+      this.transfer(device_id);
+    });
+
+    player.addListener('not_ready', ({ device_id }: { device_id: string }) => {
+      console.log('[Not-ify] Device ID has gone offline', device_id);
+    });
+
+    await player.connect();
   }
 
   search(): void {
@@ -91,19 +144,46 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  transfer(): void {
+  transfer(deviceId: string): void {
     const url = 'http://127.0.0.1:8000/player';
     const headers = new HttpHeaders({
       Authorization:
         'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
     });
     const body = {
-      device_ids: [this.deviceId],
+      device_ids: [deviceId],
       play: true
     };
 
     this.http.put(url, body, { headers }).subscribe((data) => {
       console.log(data);
+    });
+  }
+
+  getCurrentlyPlaying(): void {
+    const url = 'http://127.0.0.1:8000/player/currently-playing';
+    const headers = new HttpHeaders({
+      Authorization:
+        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
+    });
+
+    this.http.get(url, { headers }).subscribe((data) => {
+      console.log(data);
+    });
+  }
+
+  private waitForSpotifyWebPlaybackSDKToLoad(): Promise<typeof Spotify> {
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    window.onSpotifyWebPlaybackSDKReady = () => {};
+
+    return new Promise((resolve) => {
+      if (window.Spotify) {
+        resolve(window.Spotify);
+      } else {
+        window.onSpotifyWebPlaybackSDKReady = () => {
+          resolve(window.Spotify);
+        };
+      }
     });
   }
 }
