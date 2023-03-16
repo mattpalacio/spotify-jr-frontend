@@ -21,7 +21,8 @@ export class MusicService {
     const params = new HttpParams({
       fromObject: {
         q: 'track:'+ trackTitle,
-        type: 'track'
+        type: 'track',
+        limit: 10
       }
     });
 

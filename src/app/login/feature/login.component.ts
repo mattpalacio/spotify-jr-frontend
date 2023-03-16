@@ -27,14 +27,13 @@ import { CommonModule } from "@angular/common";
           src="../assets/36EC4E8E-3407-4013-BB62-DDF6572BB5D1-removebg-preview.png"
           alt="Not-ify logo"
         />
-        <h4>Reasons to listen with US</h4>
+        <h4>Hey there, music lover!</h4>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat. Duis aute irure dolor in
-          reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-          pariatur.
+          Welcome to Not-ify, the web app that lets you discover 
+          and enjoy tunes from all over the world. Whether you're into rock, pop, jazz, 
+          or anything in between, we've got you covered. Just search for your favorite tunes 
+          and start listening. Join our groovy community of music fans. So what are you waiting for? 
+          Sign in now and get ready to groove with Not-ify!
         </p>
       </div>
       <div class="button-container">

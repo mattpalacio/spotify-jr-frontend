@@ -1,0 +1,113 @@
+.container {
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.search-bar-container {
+  width: 60%;
+  height: 10px;
+  background-color: white;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  padding: 20px;
+}
+.search-bar-container > i {
+  font-size: 20px;
+  color: #777;
+}
+input.search {
+  width: 80%;
+}
+
+.search-bar-container > input {
+  flex: 1;
+  height: none border;
+  border: none;
+  outline: none;
+  font-size: 18px;
+  padding-left: 10px;
+}
+
+button.search {
+  border: none;
+  background-color: transparent;
+}
+
+button.search:hover {
+  cursor: pointer;
+}
+.music-player-container {
+  background: white;
+  border-radius: 15px;
+  width: 60%;
+  padding: 20px;
+  margin-top: 10px;
+  overflow: scroll;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 50px;
+    gap: 20px;
+  }
+  .box1 {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+
+  .box2 {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 2;
+    position: relative;
+    display: flex;
+    align-items: end;
+  }
+
+  .box3 {
+    grid-column-start: 2;
+    grid-column-end: 4;
+    grid-row-start: 2;
+    grid-row-end: 3;
+    position: relative;
+  }
+
+  .box4 {
+    grid-column-start: 4;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 3;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .play-button-small {
+    padding: 15px;
+    padding: 15px;
+    border: none;
+    background: transparent;
+  }
+
+  .play-button-small:hover {
+    cursor: pointer;
+  }
+
+  div.wrapper:hover {
+    background-color: rgba(235, 107, 64, .3);
+    border-radius: 30px;
+  }
+
+  
