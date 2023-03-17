@@ -51,7 +51,7 @@ import { MusicStore } from "src/app/store/music.store";
       <div class="flex-container">
         <p>{{ duration | date : "mm:ss" }}</p>
         <div class="progress-bar">
-          <div [style.width.%]="40" class="progress-bar-inside"></div>
+          <div [style.width.%]="10" class="progress-bar-inside"></div>
         </div>
         <p>{{ selectedSongDuration | date : "mm:ss" }}</p>
       </div>

@@ -165,9 +165,11 @@ button.search:hover {
   }
 
   .progress-bar-inside {
-    background-color: blue;
+    background-color:#c38076;
     position: absolute;
-    z-index: 2;
+    height: 5px;
+    border-radius: 25px;
+    
   }
 
   
