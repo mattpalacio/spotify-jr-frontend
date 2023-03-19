@@ -31,6 +31,7 @@
   display: flex;
   align-items: center;
   padding: 20px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 .search-bar-container > i {
   font-size: 20px;
@@ -68,6 +69,7 @@ button.search:hover {
   overflow: scroll;
   overflow-x: hidden;
   max-height: 60vh;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .wrapper {
@@ -129,6 +131,7 @@ button.search:hover {
   div.wrapper:hover {
     background-color: rgba(235, 107, 64, .3);
     border-radius: 30px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
 
   .play-button-small:hover {
@@ -137,10 +140,20 @@ button.search:hover {
 
   .play-button-large {
     transform: scale(1.5);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
+
 /* player bottom buttons */
   .flex-container {
     display: flex;
+  }
+
+  .next_btn {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+
+  .prev-btn {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
 
   .flex-container > button {
@@ -162,6 +175,7 @@ button.search:hover {
     border-radius: 25px;
     margin: 23px;
     position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   }
 
   .progress-bar-inside {

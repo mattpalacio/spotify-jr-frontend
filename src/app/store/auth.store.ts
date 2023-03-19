@@ -37,7 +37,7 @@ export class AuthStore {
   logout() {
     this.subject.next(null);
     localStorage.removeItem(AUTH_DATA);
-    this.router.navigateByUrl('/login')
+    this.router.navigateByUrl('')
     
   }
 }

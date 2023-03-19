@@ -12,7 +12,7 @@ export class AuthGaurdService implements CanActivate {
     canActivate(): Observable<boolean> {
         return this.authStore.authData$.pipe(map((data) => {
             if(!data){
-               this.router.navigateByUrl('/login');
+               this.router.navigateByUrl('');
                return false;
             }
             return true;

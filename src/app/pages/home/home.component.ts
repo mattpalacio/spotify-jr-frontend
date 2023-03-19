@@ -25,40 +25,52 @@ import { MusicStore } from "src/app/store/music.store";
           <mat-icon (click)="search(searchInput.value)">search</mat-icon>
         </button>
       </div>
-      <div class="music-player-container scroller">
-        <ng-container *ngIf="tracks$ | async as tracks">
+      <div class="music-player-container scroller" *ngIf="tracks$ | async as tracks">
           <ng-container *ngFor="let track of tracks.tracks.items">
-            <!-- <button> -->
             <div class="wrapper">
               <div class="box1">
                 <button
+                  *ngIf="trackUri !== track.uri || !running"
                   class="play-button-small"
                   (click)="play(track.uri, track.duration_ms)"
                 >
                   <mat-icon>play_circle_filled</mat-icon>
                 </button>
-                <!-- <button *ngIf="trackProgress > 0" class="play-button-small" (click)="pause()"><mat-icon>pause_circle_filled</mat-icon></button> -->
-                <img src="{{ track.album.images[2].url }}" alt="" />
+                <button
+                  *ngIf="running && trackUri === track.uri"
+                  class="play-button-small"
+                  (click)="pause()"
+                >
+                  <mat-icon>pause_circle_filled</mat-icon>
+                </button>
+                <img
+                  src="{{ track.album.images[2].url }}"
+                  alt="album cover art"
+                />
               </div>
               <div class="box2">{{ track.name }}</div>
               <div class="box3">{{ track.album.artists[0].name }}</div>
               <div class="box4">{{ track.duration_ms | date : "mm:ss" }}</div>
             </div>
-            <!-- </button> -->
-          </ng-container>
         </ng-container>
       </div>
       <div class="flex-container">
         <p>{{ duration | date : "mm:ss" }}</p>
         <div class="progress-bar">
-          <div [style.width.%]="10" class="progress-bar-inside"></div>
+          <div
+            [style.width.%]="percentageComplete"
+            class="progress-bar-inside"
+          ></div>
         </div>
         <p>{{ selectedSongDuration | date : "mm:ss" }}</p>
       </div>
       <div class="flex-container">
         <button class="prev-btn"><mat-icon>skip_previous</mat-icon></button>
-        <button class="play-button-large">
-          <mat-icon>play_circle_filled</mat-icon>
+        <button class="play-button-large" *ngIf="!running" (click)="play(trackUri, duration)">
+          <mat-icon>play_arrow</mat-icon>
+        </button>
+        <button class="play-button-large" *ngIf="running" (click)="pause()">
+          <mat-icon>pause</mat-icon>
         </button>
         <button class="next_btn"><mat-icon>skip_next</mat-icon></button>
       </div>
@@ -75,6 +87,7 @@ export class HomeComponent implements AfterViewInit {
   duration = 0;
   startTimer: any;
   running = false;
+  percentageComplete = 0;
 
   constructor(private http: HttpClient, private musicStore: MusicStore) {}
 
@@ -90,9 +103,11 @@ export class HomeComponent implements AfterViewInit {
       this.startTimer = setInterval(() => {
         this.selectedSongDuration = this.selectedSongDuration - 1000;
         this.duration = this.duration + 1000;
-        if(this.duration > trackDuration){
+        this.percentageComplete = (this.duration / trackDuration) * 100;
+        if (this.duration > trackDuration) {
           this.duration = 0;
           this.selectedSongDuration = 0;
+          this.percentageComplete = 0;
           this.stop();
         }
       }, 1000);
@@ -105,6 +120,7 @@ export class HomeComponent implements AfterViewInit {
     clearInterval(this.startTimer);
     this.running = false;
   }
+
   async initPlaybackSDK() {
     const accessToken = JSON.parse(
       localStorage.getItem("auth_data")!

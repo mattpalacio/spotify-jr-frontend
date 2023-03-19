@@ -8,34 +8,34 @@ button.login {
   padding: 20px;
   border-radius: 30px;
   color: white;
-  background-color: #52ab98;
+  background-color: #749acc;
   border: none;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 20px;
-  box-shadow: 0 10px 0 0 #3c7c6e;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  /* box-shadow: 0 10px 0 0 #3c7c6e; */
 }
 
 button.login:hover {
   cursor: pointer; 
 }
 
-button.login:active {
+/* button.login:active {
   transform: translateY(4px);
   box-shadow: 0 5px 0 0 #346b5f;
-}
+} */
 
 .background-overlay {
   width: 100%;
   height: 50rem;
-  background: linear-gradient(135deg, #eb6b40, #9b45b2); 
-  /* #7600bc, #a000c8*/
+  background: linear-gradient(135deg, #44365d, #a06277); 
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
   position: relative;
-  box-shadow: 2px 2px 5px #c34da0;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .flex-container {
@@ -87,9 +87,10 @@ p {
   list-style: none;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #eb6b40, #9b45b2);
+  background: linear-gradient(135deg, #e49fa2, #a06277);
   bottom: -150px;
   animation: animate 25s linear infinite;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .shapes div:nth-child(1) {

@@ -4,7 +4,7 @@ import { AuthGaurdService } from './services/auth-gaurd.service';
 
 const routes: Routes = [
   {
-    path: 'login',
+    path: '',
     loadComponent: () =>
       import('src/app/login/feature/login.component').then(
         (x) => x.LoginComponent
