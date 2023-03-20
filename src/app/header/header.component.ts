@@ -21,7 +21,7 @@ import { AuthStore } from "../store/auth.store";
     </nav>
   `,
   styles: [
-    ".nav { padding: 10px; background-color: #44365d; box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;}",
+    ".nav { padding: 10px;}",
     ".logo {width: 200px;}",
     ".nav-menu-items {list-style-type: none; display: flex; align-items: center; flex-direction: row; justify-content: flex-end; color: white; font-family: Arial, Helvetica, sans-serif;}",
     ".left {margin-right: auto }",

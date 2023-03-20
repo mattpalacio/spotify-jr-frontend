@@ -48,7 +48,6 @@ import { CommonModule } from "@angular/common";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginComponent {
-  ngOnInit() {}
 
   getCode(): void {
     window.location.href = "http://127.0.0.1:8000/authorize";

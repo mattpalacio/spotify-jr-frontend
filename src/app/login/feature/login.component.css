@@ -4,27 +4,33 @@
   text-align: center;
 }
 
-button.login {
-  padding: 20px;
-  border-radius: 30px;
-  color: white;
+
+.login {
   background-color: #749acc;
+  border-radius: 25px;
   border: none;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#44365d 0 -3px 0 inset;
+  box-sizing: border-box;
+  cursor: pointer;
+  justify-content: center;
+  padding: 20px;
+  transition: box-shadow .15s,transform .15s;
   font-family: "Poppins", sans-serif;
   font-weight: 600;
   font-size: 20px;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
-  /* box-shadow: 0 10px 0 0 #3c7c6e; */
+  color: white;
+}
+.login:hover {
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #44365d 0 -3px 0 inset;
+  transform: translateY(-2px);
 }
 
-button.login:hover {
-  cursor: pointer; 
+.login:active {
+  box-shadow: #D6D6E7 0 3px 7px inset;
+  transform: translateY(2px);
 }
 
-/* button.login:active {
-  transform: translateY(4px);
-  box-shadow: 0 5px 0 0 #346b5f;
-} */
+
 
 .background-overlay {
   width: 100%;
@@ -87,7 +93,7 @@ p {
   list-style: none;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #e49fa2, #a06277);
+  background: linear-gradient(135deg, #e49fa2, #749acc);
   bottom: -150px;
   animation: animate 25s linear infinite;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
