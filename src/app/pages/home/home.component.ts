@@ -66,10 +66,10 @@ import { MusicStore } from "src/app/store/music.store";
       </div>
       <div class="flex-container">
         <button class="prev-btn"><mat-icon>skip_previous</mat-icon></button>
-        <button class="play-button-large" *ngIf="!running" (click)="play(trackUri, duration)">
+        <button class="play-button-large" *ngIf="!running">
           <mat-icon>play_arrow</mat-icon>
         </button>
-        <button class="play-button-large" *ngIf="running" (click)="pause()">
+        <button class="play-button-large" *ngIf="running">
           <mat-icon>pause</mat-icon>
         </button>
         <button class="next_btn"><mat-icon>skip_next</mat-icon></button>
@@ -82,11 +82,11 @@ export class HomeComponent implements AfterViewInit {
   tracks$: Observable<any>;
   deviceId: string | null = null;
   trackUri: string | null = null;
+  running: boolean;
   trackProgress = 0;
   selectedSongDuration = 0;
   duration = 0;
   startTimer: any;
-  running = false;
   percentageComplete = 0;
 
   constructor(private http: HttpClient, private musicStore: MusicStore) {}
@@ -118,7 +118,7 @@ export class HomeComponent implements AfterViewInit {
 
   stop(): void {
     clearInterval(this.startTimer);
-    this.running = false;
+    this.running = !this.running;
   }
 
   async initPlaybackSDK() {
@@ -185,11 +185,19 @@ export class HomeComponent implements AfterViewInit {
 
   search(trackName: string) {
     this.musicStore.getTracks(trackName);
-    console.log(this.tracks$);
     this.tracks$ = this.musicStore.loadTracks();
   }
 
   play(uri: string, duration: number): void {
+    // if user clicked a new track, reset durations and progress bar
+    if(this.trackUri == null || this.trackUri != uri){
+      this.selectedSongDuration = 0;
+      this.duration = 0;
+      this.percentageComplete = 0;
+      this.stop();
+    }
+
+    //this.trackUri = uri;
     const url = "http://127.0.0.1:8000/player/play";
     const headers = new HttpHeaders({
       Authorization:
@@ -200,14 +208,16 @@ export class HomeComponent implements AfterViewInit {
         device_id: this.deviceId!,
       },
     });
+
+    this.selectedSongDuration = duration;
+    this.start(duration);
+
     const body = {
       uris: [uri],
-      position_ms: this.trackProgress,
+      position_ms: this.duration,
     };
 
     this.http.put(url, body, { headers, params }).subscribe();
-    this.selectedSongDuration = duration;
-    this.start(duration);
   }
 
   pause(): void {
