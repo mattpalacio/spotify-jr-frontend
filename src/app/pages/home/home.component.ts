@@ -22,6 +22,9 @@ import { MusicStore } from "src/app/store/music.store";
           placeholder="Search Tracks"
           #searchInput
         />
+        <button *ngIf="searchInput.value" class="search" type="button" aria-label="clear" (click)="searchInput.value = ''">
+          <mat-icon>clear</mat-icon>
+        </button>
         <button class="search" type="button" aria-label="search" (click)="search(searchInput.value)">
           <mat-icon>search</mat-icon>
         </button>
@@ -126,7 +129,6 @@ export class HomeComponent implements AfterViewInit {
     clearInterval(this.startTimer);
     this.running = false;
   }
-
   async initPlaybackSDK() {
     const accessToken = JSON.parse(
       localStorage.getItem("auth_data")!

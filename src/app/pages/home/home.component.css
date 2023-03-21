@@ -3,7 +3,7 @@
 }
  
 ::-webkit-scrollbar-thumb {
-  background: #df998e;
+  background: rgba(68, 54, 93, .3);
   border-radius: 10px;
   border: 2px solid white;
 }
@@ -13,7 +13,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #c38076; 
+  background: #44365d; 
 }
 
 .container {
@@ -141,6 +141,7 @@ button.search:hover {
   .play-button-large {
     transform: scale(1.5);
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 2px solid rgba(68, 54, 93, .3);
   }
 
 /* player bottom buttons */
@@ -150,16 +151,17 @@ button.search:hover {
 
   .next_btn {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 2px solid rgba(68, 54, 93, .3);
   }
 
   .prev-btn {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 2px solid rgba(68, 54, 93, .3);
   }
 
   .flex-container > button {
     margin: 20px;
     background-color: white;
-    border: none;
     border-radius: 50%;
     padding: 10px;
   }
@@ -176,6 +178,7 @@ button.search:hover {
     margin: 23px;
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    /* border: 2px solid rgba(68, 54, 93, .3); */
   }
 
   .progress-bar-inside {
