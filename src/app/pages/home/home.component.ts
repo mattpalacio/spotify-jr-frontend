@@ -16,13 +16,14 @@ import { MusicStore } from "src/app/store/music.store";
     <div class="container">
       <div class="search-bar-container">
         <input
+          (keydown.enter)="search(searchInput.value)"
           type="text"
           class="search"
           placeholder="Search Tracks"
           #searchInput
         />
-        <button class="search">
-          <mat-icon (click)="search(searchInput.value)">search</mat-icon>
+        <button class="search" type="button" aria-label="search" (click)="search(searchInput.value)">
+          <mat-icon>search</mat-icon>
         </button>
       </div>
       <div class="music-player-container scroller" *ngIf="tracks$ | async as tracks">
@@ -31,14 +32,18 @@ import { MusicStore } from "src/app/store/music.store";
               <div class="box1">
                 <button
                   *ngIf="trackUri !== track.uri || !running"
+                  type="button"
                   class="play-button-small"
+                  aria-label="play"
                   (click)="play(track.uri, track.duration_ms)"
                 >
                   <mat-icon>play_circle_filled</mat-icon>
                 </button>
                 <button
                   *ngIf="running && trackUri === track.uri"
+                  type="button"
                   class="play-button-small"
+                  aria-label="pause"
                   (click)="pause()"
                 >
                   <mat-icon>pause_circle_filled</mat-icon>
@@ -65,14 +70,14 @@ import { MusicStore } from "src/app/store/music.store";
         <p>{{ selectedSongDuration | date : "mm:ss" }}</p>
       </div>
       <div class="flex-container">
-        <button class="prev-btn"><mat-icon>skip_previous</mat-icon></button>
-        <button class="play-button-large" *ngIf="!running">
+        <button type="button" class="prev-btn" aria-label="search"><mat-icon>skip_previous</mat-icon></button>
+        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, this.trackTotalDuration)">
           <mat-icon>play_arrow</mat-icon>
         </button>
-        <button class="play-button-large" *ngIf="running">
+        <button type="button" class="play-button-large" *ngIf="running" aria-label="pause" (click)="pause()">
           <mat-icon>pause</mat-icon>
         </button>
-        <button class="next_btn"><mat-icon>skip_next</mat-icon></button>
+        <button type="button" class="next_btn" aria-label="next track"><mat-icon>skip_next</mat-icon></button>
       </div>
     </div>
   `,
@@ -88,6 +93,7 @@ export class HomeComponent implements AfterViewInit {
   duration = 0;
   startTimer: any;
   percentageComplete = 0;
+  trackTotalDuration = 0;
 
   constructor(private http: HttpClient, private musicStore: MusicStore) {}
 
@@ -118,7 +124,7 @@ export class HomeComponent implements AfterViewInit {
 
   stop(): void {
     clearInterval(this.startTimer);
-    this.running = !this.running;
+    this.running = false;
   }
 
   async initPlaybackSDK() {
@@ -163,7 +169,7 @@ export class HomeComponent implements AfterViewInit {
       "player_state_changed",
 
       (state: Spotify.PlaybackState) => {
-        console.log(state);
+        // console.log(state);
         this.getCurrentlyPlaying();
       }
     );
@@ -194,10 +200,12 @@ export class HomeComponent implements AfterViewInit {
       this.selectedSongDuration = 0;
       this.duration = 0;
       this.percentageComplete = 0;
+      this.trackTotalDuration = duration;
       this.stop();
     }
 
-    //this.trackUri = uri;
+    this.trackUri = uri;
+
     const url = "http://127.0.0.1:8000/player/play";
     const headers = new HttpHeaders({
       Authorization:
@@ -211,6 +219,8 @@ export class HomeComponent implements AfterViewInit {
 
     this.selectedSongDuration = duration;
     this.start(duration);
+    console.log("track duration:", duration);
+    console.log("track progress:", this.trackProgress);
 
     const body = {
       uris: [uri],
@@ -234,8 +244,8 @@ export class HomeComponent implements AfterViewInit {
       },
     });
 
-    this.http.put(url, {}, { headers, params }).subscribe();
     this.stop();
+    this.http.put(url, {}, { headers, params }).subscribe();
   }
 
   getDevices(): void {
