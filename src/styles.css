@@ -1,10 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+
+:root {
+  --color-white: #fefcee;
+  --color-black: #000000;
+  --color-gray: #eee;
+  --color-primary: #a06277;
+  --color-accent: #44365d;
+}
+
 body {
-  background: linear-gradient(to bottom, #a06277, #fefcee);
+  background-image: linear-gradient(
+    to bottom,
+    #a06277,
+    #b48298,
+    #c8a3b8,
+    #ddc5d6,
+    #f4e7f3
+  );
   background-repeat: no-repeat;
   background-attachment: fixed;
   margin: 0;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}

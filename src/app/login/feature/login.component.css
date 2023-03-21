@@ -4,44 +4,49 @@
   text-align: center;
 }
 
-
 .login {
-  background-color: #749acc;
+  background-color: var(--color-accent);
   border-radius: 25px;
   border: none;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#44365d 0 -3px 0 inset;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #44365d 0 -3px 0 inset;
   box-sizing: border-box;
   cursor: pointer;
   justify-content: center;
   padding: 20px;
-  transition: box-shadow .15s,transform .15s;
-  font-family: "Poppins", sans-serif;
+  transition: box-shadow 0.15s, transform 0.15s;
+  font-family: 'Poppins', sans-serif;
   font-weight: 600;
   font-size: 20px;
   color: white;
 }
 .login:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #44365d 0 -3px 0 inset;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #44365d 0 -3px 0 inset;
   transform: translateY(-2px);
 }
 
 .login:active {
-  box-shadow: #D6D6E7 0 3px 7px inset;
+  box-shadow: #d6d6e7 0 3px 7px inset;
   transform: translateY(2px);
 }
-
-
 
 .background-overlay {
   width: 100%;
   height: 50rem;
-  background: linear-gradient(135deg, #44365d, #a06277); 
+  background-image: linear-gradient(
+    to bottom,
+    #44365d,
+    #504169,
+    #5c4d76,
+    #685983,
+    #756590
+  );
   color: white;
   font-family: Arial, Helvetica, sans-serif;
   border-bottom-left-radius: 50%;
   border-bottom-right-radius: 50%;
   position: relative;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .flex-container {
@@ -54,7 +59,7 @@
   top: 90px;
   left: 0;
   right: 0;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
 }
 
 h4 {
@@ -93,10 +98,19 @@ p {
   list-style: none;
   width: 20px;
   height: 20px;
-  background: linear-gradient(135deg, #e49fa2, #749acc);
+  background-image: linear-gradient(
+    to left top,
+    #a06277,
+    #b48298,
+    #c8a3b8,
+    #ddc5d6,
+    #f4e7f3
+  );
   bottom: -150px;
   animation: animate 25s linear infinite;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px, rgba(0, 0, 0, 0.3) 0px 30px 60px -30px, rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px,
+    rgba(10, 37, 64, 0.35) 0px -2px 6px 0px inset;
 }
 
 .shapes div:nth-child(1) {
