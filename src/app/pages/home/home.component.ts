@@ -70,11 +70,11 @@ import { MusicStore } from "src/app/store/music.store";
             class="progress-bar-inside"
           ></div>
         </div>
-        <p>{{ selectedSongDuration | date : "mm:ss" }}</p>
+        <p>-{{ selectedSongDuration | date : "mm:ss" }}</p>
       </div>
       <div class="flex-container">
         <button type="button" class="prev-btn" aria-label="search"><mat-icon>skip_previous</mat-icon></button>
-        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, this.trackTotalDuration)">
+        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, selectedSongDuration)">
           <mat-icon>play_arrow</mat-icon>
         </button>
         <button type="button" class="play-button-large" *ngIf="running" aria-label="pause" (click)="pause()">
@@ -206,8 +206,6 @@ export class HomeComponent implements AfterViewInit {
       this.stop();
     }
 
-    this.trackUri = uri;
-
     const url = "http://127.0.0.1:8000/player/play";
     const headers = new HttpHeaders({
       Authorization:
@@ -218,11 +216,11 @@ export class HomeComponent implements AfterViewInit {
         device_id: this.deviceId!,
       },
     });
-
+    this.trackUri = uri;
     this.selectedSongDuration = duration;
     this.start(duration);
-    console.log("track duration:", duration);
-    console.log("track progress:", this.trackProgress);
+
+    
 
     const body = {
       uris: [uri],
