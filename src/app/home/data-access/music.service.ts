@@ -2,8 +2,8 @@ import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
-import { TrackData } from "../model/track.model";
-import { AuthStore } from "../store/auth.store";
+import { TrackData } from "./track.model";
+import { AuthStore } from "../../auth/data-access/auth.store";
 
 @Injectable ()
 export class MusicService {

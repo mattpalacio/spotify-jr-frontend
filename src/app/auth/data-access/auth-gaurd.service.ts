@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Route, Router } from "@angular/router";
 import { map, Observable } from "rxjs";
-import { AuthStore } from "../store/auth.store";
+import { AuthStore } from "./auth.store";
 
 @Injectable ()
 export class AuthGaurdService implements CanActivate {

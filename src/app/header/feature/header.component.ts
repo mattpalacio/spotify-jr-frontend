@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { AuthStore } from "../store/auth.store";
+import { AuthStore } from "../../auth/data-access/auth.store";
 
 @Component({
   selector: "app-header",

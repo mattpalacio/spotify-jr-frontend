@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGaurdService } from './services/auth-gaurd.service';
+import { AuthGaurdService } from './auth/data-access/auth-gaurd.service';
 
 const routes: Routes = [
   {
@@ -13,7 +13,7 @@ const routes: Routes = [
   {
     path: 'home',
     loadComponent: () =>
-      import('src/app/pages/home/home.component').then(
+      import('src/app/home/feature/home.component').then(
         (x) => x.HomeComponent),
     canActivate: [AuthGaurdService]
   }

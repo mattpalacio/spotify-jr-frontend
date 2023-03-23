@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, map, Observable } from "rxjs";
-import { Auth } from "../model/auth.model";
+import { Auth } from "./auth.model";
 
 const AUTH_DATA = "auth_data";
 

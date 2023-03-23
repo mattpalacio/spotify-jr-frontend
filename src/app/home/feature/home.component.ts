@@ -1,11 +1,11 @@
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { AfterViewInit, Component } from "@angular/core";
-import { HeaderComponent } from "src/app/header/header.component";
+import { HeaderComponent } from "src/app/header/feature/header.component";
 import { MatIconModule } from "@angular/material/icon";
 import { CommonModule, NgFor } from "@angular/common";
 import { exhaustMap, Observable, of } from "rxjs";
-import { MusicStore } from "src/app/store/music.store";
+import { MusicStore } from "src/app/home/data-access/music.store";
 
 @Component({
   selector: "app-home",
@@ -70,11 +70,11 @@ import { MusicStore } from "src/app/store/music.store";
             class="progress-bar-inside"
           ></div>
         </div>
-        <p>-{{ selectedSongDuration | date : "mm:ss" }}</p>
+        <p>-{{ songCountDown | date : "mm:ss" }}</p>
       </div>
       <div class="flex-container">
         <button type="button" class="prev-btn" aria-label="search"><mat-icon>skip_previous</mat-icon></button>
-        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, selectedSongDuration)">
+        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, songCountDown)">
           <mat-icon>play_arrow</mat-icon>
         </button>
         <button type="button" class="play-button-large" *ngIf="running" aria-label="pause" (click)="pause()">
@@ -87,12 +87,13 @@ import { MusicStore } from "src/app/store/music.store";
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements AfterViewInit {
+  // TODO: fix interface and replace, do not use any
   tracks$: Observable<any>;
   deviceId: string | null = null;
   trackUri: string | null = null;
   running: boolean;
   trackProgress = 0;
-  selectedSongDuration = 0;
+  songCountDown = 0;
   duration = 0;
   startTimer: any;
   percentageComplete = 0;
@@ -100,8 +101,6 @@ export class HomeComponent implements AfterViewInit {
 
   constructor(private http: HttpClient, private musicStore: MusicStore) {}
 
-  // ngOnInit(): void {}
-  // this.getDevices();
   ngAfterViewInit(): void {
     this.initPlaybackSDK();
   }
@@ -110,12 +109,12 @@ export class HomeComponent implements AfterViewInit {
     if (!this.running) {
       this.running = true;
       this.startTimer = setInterval(() => {
-        this.selectedSongDuration = this.selectedSongDuration - 1000;
+        this.songCountDown = this.songCountDown - 1000;
         this.duration = this.duration + 1000;
         this.percentageComplete = (this.duration / trackDuration) * 100;
         if (this.duration > trackDuration) {
           this.duration = 0;
-          this.selectedSongDuration = 0;
+          this.songCountDown = 0;
           this.percentageComplete = 0;
           this.stop();
         }
@@ -129,6 +128,8 @@ export class HomeComponent implements AfterViewInit {
     clearInterval(this.startTimer);
     this.running = false;
   }
+
+  // TODO: move to service?
   async initPlaybackSDK() {
     const accessToken = JSON.parse(
       localStorage.getItem("auth_data")!
@@ -196,10 +197,11 @@ export class HomeComponent implements AfterViewInit {
     this.tracks$ = this.musicStore.loadTracks();
   }
 
+  // TODO: move to store
   play(uri: string, duration: number): void {
     // if user clicked a new track, reset durations and progress bar
     if(this.trackUri == null || this.trackUri != uri){
-      this.selectedSongDuration = 0;
+      this.songCountDown = 0;
       this.duration = 0;
       this.percentageComplete = 0;
       this.trackTotalDuration = duration;
@@ -217,7 +219,7 @@ export class HomeComponent implements AfterViewInit {
       },
     });
     this.trackUri = uri;
-    this.selectedSongDuration = duration;
+    this.songCountDown = duration;
     this.start(duration);
 
     
@@ -230,6 +232,7 @@ export class HomeComponent implements AfterViewInit {
     this.http.put(url, body, { headers, params }).subscribe();
   }
 
+  // TODO: move to store
   pause(): void {
     this.getCurrentlyPlaying();
 
@@ -248,6 +251,7 @@ export class HomeComponent implements AfterViewInit {
     this.http.put(url, {}, { headers, params }).subscribe();
   }
 
+  // TODO: move to store
   getDevices(): void {
     const url = "http://127.0.0.1:8000/player/devices";
     const headers = new HttpHeaders({
@@ -262,6 +266,7 @@ export class HomeComponent implements AfterViewInit {
     });
   }
 
+  // TODO: move to store
   transfer(deviceId: string): void {
     const url = "http://127.0.0.1:8000/player";
     const headers = new HttpHeaders({
@@ -276,6 +281,7 @@ export class HomeComponent implements AfterViewInit {
     this.http.put(url, body, { headers }).subscribe();
   }
 
+  // TODO: move to store
   getCurrentlyPlaying(): void {
     const url = "http://127.0.0.1:8000/player/currently-playing";
     const headers = new HttpHeaders({
@@ -292,6 +298,7 @@ export class HomeComponent implements AfterViewInit {
       });
   }
 
+  // TODO: move to store
   private waitForSpotifyWebPlaybackSDKToLoad(): Promise<typeof Spotify> {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     window.onSpotifyWebPlaybackSDKReady = () => {};

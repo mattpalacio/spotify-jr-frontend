@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable, shareReplay } from "rxjs";
-import { TrackData } from "../model/track.model";
-import { MusicService } from "../services/music.service";
+import { TrackData } from "./track.model";
+import { MusicService } from "./music.service";
 
 @Injectable({
     providedIn: 'root'
