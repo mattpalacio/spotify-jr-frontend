@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { exhaustMap, of } from 'rxjs';
-import { Auth } from './auth/data-access/auth.model';
-import { AuthStore } from './auth/data-access/auth.store';
+import { Auth } from './login/data-access/auth.model';
+import { AuthStore } from './login/data-access/auth.store';
 
 @Component({
   selector: 'app-root',

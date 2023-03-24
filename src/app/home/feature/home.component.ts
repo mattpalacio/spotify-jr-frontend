@@ -6,29 +6,16 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule, NgFor } from "@angular/common";
 import { exhaustMap, Observable, of } from "rxjs";
 import { MusicStore } from "src/app/home/data-access/music.store";
+import { SearchComponent } from "../ui/search/seach.component";
 
 @Component({
   selector: "app-home",
-  imports: [HeaderComponent, MatIconModule, CommonModule, NgFor],
+  imports: [HeaderComponent, MatIconModule, CommonModule, NgFor, SearchComponent],
   standalone: true,
   template: `
     <app-header></app-header>
     <div class="container">
-      <div class="search-bar-container">
-        <input
-          (keydown.enter)="search(searchInput.value)"
-          type="text"
-          class="search"
-          placeholder="Search Tracks"
-          #searchInput
-        />
-        <button *ngIf="searchInput.value" class="search" type="button" aria-label="clear" (click)="searchInput.value = ''">
-          <mat-icon>clear</mat-icon>
-        </button>
-        <button class="search" type="button" aria-label="search" (click)="search(searchInput.value)">
-          <mat-icon>search</mat-icon>
-        </button>
-      </div>
+      <app-search></app-search>
       <div class="music-player-container scroller" *ngIf="tracks$ | async as tracks">
           <ng-container *ngFor="let track of tracks.tracks.items">
             <div class="wrapper">

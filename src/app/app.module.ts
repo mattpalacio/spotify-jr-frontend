@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthGaurdService } from './auth/data-access/auth-gaurd.service';
+import { AuthGaurdService } from './login/data-access/auth-gaurd.service';
 import { MusicService } from './home/data-access/music.service';
 
 @NgModule({

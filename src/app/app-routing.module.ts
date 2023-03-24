@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AuthGaurdService } from './auth/data-access/auth-gaurd.service';
+import { AuthGaurdService } from './login/data-access/auth-gaurd.service';
 
 const routes: Routes = [
   {

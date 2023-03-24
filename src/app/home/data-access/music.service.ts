@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Observable } from "rxjs";
 import { TrackData } from "./track.model";
-import { AuthStore } from "../../auth/data-access/auth.store";
+import { AuthStore } from "../../login/data-access/auth.store";
 
 @Injectable ()
 export class MusicService {
