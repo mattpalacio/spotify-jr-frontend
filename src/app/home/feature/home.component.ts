@@ -15,7 +15,7 @@ import { SearchComponent } from "../ui/search/seach.component";
   template: `
     <app-header></app-header>
     <div class="container">
-      <app-search></app-search>
+      <app-search (searchEvent)="receiveSearch($event)"></app-search>
       <div class="music-player-container scroller" *ngIf="tracks$ | async as tracks">
           <ng-container *ngFor="let track of tracks.tracks.items">
             <div class="wrapper">
@@ -179,8 +179,8 @@ export class HomeComponent implements AfterViewInit {
     await player.connect();
   }
 
-  search(trackName: string) {
-    this.musicStore.getTracks(trackName);
+  receiveSearch($event: string) {
+    this.musicStore.getTracks($event);
     this.tracks$ = this.musicStore.loadTracks();
   }
 
