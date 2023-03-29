@@ -153,7 +153,6 @@ export class HomeComponent implements AfterViewInit {
       "player_state_changed",
 
       (state: Spotify.PlaybackState) => {
-        // console.log(state);
         this.getCurrentlyPlaying();
       }
     );

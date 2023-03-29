@@ -28,7 +28,7 @@ import { CommonModule } from "@angular/common";
   })
   export class SearchComponent {
     @Output() searchEvent = new EventEmitter<string>();
-    // constructor() {}
+    
     search(trackName: string) {
       this.searchEvent.emit(trackName);
     }
