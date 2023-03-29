@@ -8,6 +8,7 @@
   
   .flex-container {
     display: flex;
+    justify-content: center;
   }
   
   .next_btn {

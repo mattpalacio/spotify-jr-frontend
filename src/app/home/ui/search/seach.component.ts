@@ -8,7 +8,6 @@ import { CommonModule } from "@angular/common";
     standalone: true,
     template: `
       <div class="search-bar-container">
-      
         <input
           (keydown.enter)="search(searchInput.value)"
           type="text"
@@ -28,7 +27,7 @@ import { CommonModule } from "@angular/common";
   })
   export class SearchComponent {
     @Output() searchEvent = new EventEmitter<string>();
-    
+
     search(trackName: string) {
       this.searchEvent.emit(trackName);
     }

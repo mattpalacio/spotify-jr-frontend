@@ -26,23 +26,29 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
   template: `
     <app-header></app-header>
     <div class="container">
-      <app-search (searchEvent)="receiveSearch($event)"></app-search>
-      <app-search-results 
-        [tracks]="tracks$ | async" 
-        [trackUri]="trackUri" 
-        [running]="running" 
-        (playEvent)="playEvent($event)"
-        (pauseEvent)="pauseEvent()">
-      </app-search-results>
-      <app-music-player-controls 
-        [running]="running" 
-        [duration]="duration" 
-        [percentageComplete]="percentageComplete"
-        [trackUri]="trackUri"
-        [songCountDown]="songCountDown"
-        (playEvent)="playEvent($event)"
-        (pauseEvent)="pauseEvent()">
-      </app-music-player-controls>
+      <div class="flex-item">
+        <app-search (searchEvent)="receiveSearch($event)"></app-search>
+      </div>
+      <div class="flex-item">
+        <app-search-results 
+          [tracks]="tracks$ | async" 
+          [trackUri]="trackUri" 
+          [running]="running" 
+          (playEvent)="playEvent($event)"
+          (pauseEvent)="pauseEvent()">
+        </app-search-results>
+      </div>
+      <div class="flex-item">
+        <app-music-player-controls 
+          [running]="running" 
+          [duration]="duration" 
+          [percentageComplete]="percentageComplete"
+          [trackUri]="trackUri"
+          [songCountDown]="songCountDown"
+          (playEvent)="playEvent($event)"
+          (pauseEvent)="pauseEvent()">
+        </app-music-player-controls>
+      </div>
     </div>
   `,
   styleUrls: ["./home.component.css"],
