@@ -9,6 +9,7 @@ import { MusicStore } from "src/app/home/data-access/music.store";
 import { SearchComponent } from "../ui/search/seach.component";
 import { SearchResultsComponent } from "../ui/search-result/search-results.component";
 import { TrackData } from "../data-access/track.model";
+import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-player-controls";
 
 @Component({
   selector: "app-home",
@@ -19,50 +20,29 @@ import { TrackData } from "../data-access/track.model";
     NgFor,
     SearchComponent,
     SearchResultsComponent,
+    MusicPlayerControlsComponent
   ],
   standalone: true,
   template: `
     <app-header></app-header>
     <div class="container">
       <app-search (searchEvent)="receiveSearch($event)"></app-search>
-      <app-search-results [tracks]="tracks$ | async" [trackUri]="trackUri" [running]="running" (playEvent)="playEvent($event)"></app-search-results>
-      <div class="flex-container">
-        <p>{{ duration | date : "mm:ss" }}</p>
-        <div class="progress-bar">
-          <div
-            [style.width.%]="percentageComplete"
-            class="progress-bar-inside"
-          ></div>
-        </div>
-        <p>-{{ songCountDown | date : "mm:ss" }}</p>
-      </div>
-      <div class="flex-container">
-        <button type="button" class="prev-btn" aria-label="search">
-          <mat-icon>skip_previous</mat-icon>
-        </button>
-        <button
-          type="button"
-          class="play-button-large"
-          *ngIf="!running"
-          aria-label="play"
-          
-        >
-        <!-- (click)="play(this.trackUri, songCountDown)" -->
-          <mat-icon>play_arrow</mat-icon>
-        </button>
-        <button
-          type="button"
-          class="play-button-large"
-          *ngIf="running"
-          aria-label="pause"
-          (click)="pause()"
-        >
-          <mat-icon>pause</mat-icon>
-        </button>
-        <button type="button" class="next_btn" aria-label="next track">
-          <mat-icon>skip_next</mat-icon>
-        </button>
-      </div>
+      <app-search-results 
+        [tracks]="tracks$ | async" 
+        [trackUri]="trackUri" 
+        [running]="running" 
+        (playEvent)="playEvent($event)"
+        (pauseEvent)="pauseEvent()">
+      </app-search-results>
+      <app-music-player-controls 
+        [running]="running" 
+        [duration]="duration" 
+        [percentageComplete]="percentageComplete"
+        [trackUri]="trackUri"
+        [songCountDown]="songCountDown"
+        (playEvent)="playEvent($event)"
+        (pauseEvent)="pauseEvent()">
+      </app-music-player-controls>
     </div>
   `,
   styleUrls: ["./home.component.css"],
@@ -211,7 +191,7 @@ export class HomeComponent implements AfterViewInit {
   }
 
   // TODO: move to store
-  pause(): void {
+  pauseEvent(): void {
     this.getCurrentlyPlaying();
 
     const url = "http://127.0.0.1:8000/player/pause";

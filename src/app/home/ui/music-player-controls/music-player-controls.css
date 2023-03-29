@@ -1,0 +1,50 @@
+.play-button-large {
+    border: 2px solid transparent; /* Makes the button perfectly circle */
+    border-radius: 50%;
+    line-height: 1;
+    transform: scale(1.5);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  
+  .flex-container {
+    display: flex;
+  }
+  
+  .next_btn {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 2px solid transparent; /* Makes the button perfectly circle */
+  }
+  
+  .prev-btn {
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border: 2px solid transparent; /* Makes the button perfectly circle */
+  }
+  
+  .flex-container > button {
+    margin: 20px;
+    background-color: white;
+    border-radius: 50%;
+    padding: 10px;
+  }
+  
+  .flex-container > button:hover {
+    cursor: pointer;
+  }
+  
+  .progress-bar {
+    background-color: white;
+    width: 20em;
+    height: 5px;
+    border-radius: 25px;
+    margin: 23px;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  }
+  
+  .progress-bar-inside {
+    background-color: #44365d;
+    position: absolute;
+    height: 5px;
+    border-radius: 25px;
+  }
+  
