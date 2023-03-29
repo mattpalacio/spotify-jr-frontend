@@ -7,48 +7,25 @@ import { CommonModule, NgFor } from "@angular/common";
 import { exhaustMap, Observable, of } from "rxjs";
 import { MusicStore } from "src/app/home/data-access/music.store";
 import { SearchComponent } from "../ui/search/seach.component";
+import { SearchResultsComponent } from "../ui/search-result/search-results.component";
+import { TrackData } from "../data-access/track.model";
 
 @Component({
   selector: "app-home",
-  imports: [HeaderComponent, MatIconModule, CommonModule, NgFor, SearchComponent],
+  imports: [
+    HeaderComponent,
+    MatIconModule,
+    CommonModule,
+    NgFor,
+    SearchComponent,
+    SearchResultsComponent,
+  ],
   standalone: true,
   template: `
     <app-header></app-header>
     <div class="container">
       <app-search (searchEvent)="receiveSearch($event)"></app-search>
-      <div class="music-player-container scroller" *ngIf="tracks$ | async as tracks">
-          <ng-container *ngFor="let track of tracks.tracks.items">
-            <div class="wrapper">
-              <div class="box1">
-                <button
-                  *ngIf="trackUri !== track.uri || !running"
-                  type="button"
-                  class="play-button-small"
-                  aria-label="play"
-                  (click)="play(track.uri, track.duration_ms)"
-                >
-                  <mat-icon>play_circle_filled</mat-icon>
-                </button>
-                <button
-                  *ngIf="running && trackUri === track.uri"
-                  type="button"
-                  class="play-button-small"
-                  aria-label="pause"
-                  (click)="pause()"
-                >
-                  <mat-icon>pause_circle_filled</mat-icon>
-                </button>
-                <img
-                  src="{{ track.album.images[2].url }}"
-                  alt="album cover art"
-                />
-              </div>
-              <div class="box2">{{ track.name }}</div>
-              <div class="box3">{{ track.album.artists[0].name }}</div>
-              <div class="box4">{{ track.duration_ms | date : "mm:ss" }}</div>
-            </div>
-        </ng-container>
-      </div>
+      <app-search-results [tracks]="tracks$ | async" [trackUri]="trackUri" [running]="running" (playEvent)="playEvent($event)"></app-search-results>
       <div class="flex-container">
         <p>{{ duration | date : "mm:ss" }}</p>
         <div class="progress-bar">
@@ -60,14 +37,31 @@ import { SearchComponent } from "../ui/search/seach.component";
         <p>-{{ songCountDown | date : "mm:ss" }}</p>
       </div>
       <div class="flex-container">
-        <button type="button" class="prev-btn" aria-label="search"><mat-icon>skip_previous</mat-icon></button>
-        <button type="button" class="play-button-large" *ngIf="!running" aria-label="play" (click)="play(this.trackUri, songCountDown)">
+        <button type="button" class="prev-btn" aria-label="search">
+          <mat-icon>skip_previous</mat-icon>
+        </button>
+        <button
+          type="button"
+          class="play-button-large"
+          *ngIf="!running"
+          aria-label="play"
+          
+        >
+        <!-- (click)="play(this.trackUri, songCountDown)" -->
           <mat-icon>play_arrow</mat-icon>
         </button>
-        <button type="button" class="play-button-large" *ngIf="running" aria-label="pause" (click)="pause()">
+        <button
+          type="button"
+          class="play-button-large"
+          *ngIf="running"
+          aria-label="pause"
+          (click)="pause()"
+        >
           <mat-icon>pause</mat-icon>
         </button>
-        <button type="button" class="next_btn" aria-label="next track"><mat-icon>skip_next</mat-icon></button>
+        <button type="button" class="next_btn" aria-label="next track">
+          <mat-icon>skip_next</mat-icon>
+        </button>
       </div>
     </div>
   `,
@@ -75,7 +69,7 @@ import { SearchComponent } from "../ui/search/seach.component";
 })
 export class HomeComponent implements AfterViewInit {
   // TODO: fix interface and replace, do not use any
-  tracks$: Observable<any>;
+  tracks$: Observable<TrackData>;
   deviceId: string | null = null;
   trackUri: string | null = null;
   running: boolean;
@@ -185,13 +179,13 @@ export class HomeComponent implements AfterViewInit {
   }
 
   // TODO: move to store
-  play(uri: string, duration: number): void {
+  playEvent($event): void {
     // if user clicked a new track, reset durations and progress bar
-    if(this.trackUri == null || this.trackUri != uri){
+    if (this.trackUri == null || this.trackUri != $event.uri) {
       this.songCountDown = 0;
       this.duration = 0;
       this.percentageComplete = 0;
-      this.trackTotalDuration = duration;
+      this.trackTotalDuration = $event.duration;
       this.stop();
     }
 
@@ -205,14 +199,12 @@ export class HomeComponent implements AfterViewInit {
         device_id: this.deviceId!,
       },
     });
-    this.trackUri = uri;
-    this.songCountDown = duration;
-    this.start(duration);
-
-    
+    this.trackUri = $event.uri;
+    this.songCountDown = $event.duration;
+    this.start($event.duration);
 
     const body = {
-      uris: [uri],
+      uris: [$event.uri],
       position_ms: this.duration,
     };
 

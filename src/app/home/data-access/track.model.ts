@@ -1,4 +1,8 @@
 export interface TrackData {
+    tracks: Tracks;
+}
+
+export interface Tracks {
     href: string;
     items: Items[];
     limit: number;
@@ -7,7 +11,7 @@ export interface TrackData {
     previous: number | null;
     total: number; 
 }
-0
+
 export interface Items {
     album: Album;
     duration_ms: number;

@@ -1,9 +1,10 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { MatIconModule } from "@angular/material/icon";
+import { CommonModule } from "@angular/common";
 
 @Component({
     selector: "app-search",
-    imports: [MatIconModule],
+    imports: [MatIconModule, CommonModule],
     standalone: true,
     template: `
       <div class="search-bar-container">
