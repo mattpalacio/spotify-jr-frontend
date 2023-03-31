@@ -6,6 +6,8 @@ import { BehaviorSubject, first, from } from 'rxjs';
 export class WebPlaybackService {
   private player$: BehaviorSubject<Spotify.Player> = new BehaviorSubject(null);
   private deviceId$: BehaviorSubject<string> = new BehaviorSubject(null);
+  private playerState$: BehaviorSubject<Spotify.PlaybackState> =
+    new BehaviorSubject(null);
 
   get player() {
     return this.player$.getValue();
@@ -15,12 +17,20 @@ export class WebPlaybackService {
     return this.deviceId$.getValue();
   }
 
+  get playerState() {
+    return this.playerState$.getValue();
+  }
+
   loadPlayer() {
     return this.player$.asObservable();
   }
 
   loadDeviceId() {
     return this.deviceId$.asObservable();
+  }
+
+  loadPlayerState() {
+    return this.playerState$.asObservable();
   }
 
   initWebPlayback() {
@@ -50,6 +60,7 @@ export class WebPlaybackService {
     const player = new window.Spotify.Player({
       name: 'Not-ify Web Player',
       getOAuthToken: (cb) => {
+        // TODO: Get token from auth service
         const accessToken = JSON.parse(
           localStorage.getItem('auth_data')
         ).access_token;
@@ -60,32 +71,6 @@ export class WebPlaybackService {
     });
 
     this.player$.next(player);
-
-    player.addListener('initialization_error', ({ message }: Spotify.Error) => {
-      console.error(message);
-    });
-
-    player.addListener('authentication_error', ({ message }: Spotify.Error) => {
-      console.error(message);
-    });
-
-    player.addListener('account_error', ({ message }: Spotify.Error) => {
-      console.error(message);
-    });
-
-    player.addListener('playback_error', ({ message }: Spotify.Error) => {
-      alert(
-        `Your account has to have Spotify Premium for playing music ${message}`
-      );
-    });
-
-    player.addListener(
-      'player_state_changed',
-      (state: Spotify.PlaybackState) => {
-        if (!state) return;
-        console.log(state);
-      }
-    );
 
     player.addListener(
       'ready',
@@ -100,6 +85,15 @@ export class WebPlaybackService {
     );
 
     player.addListener(
+      'player_state_changed',
+      (state: Spotify.PlaybackState) => {
+        if (!state) return;
+
+        this.playerState$.next(state);
+      }
+    );
+
+    player.addListener(
       'not_ready',
       ({ device_id }: Spotify.WebPlaybackInstance) => {
         console.log(
@@ -108,6 +102,34 @@ export class WebPlaybackService {
         );
       }
     );
+
+    player.addListener('initialization_error', ({ message }: Spotify.Error) => {
+      console.error(
+        '[Not-ify Web Playback Service] Failed to initialize',
+        message
+      );
+    });
+
+    player.addListener('authentication_error', ({ message }: Spotify.Error) => {
+      console.error(
+        '[Not-ify Web Playback Service] Failed to authenticate',
+        message
+      );
+    });
+
+    player.addListener('account_error', ({ message }: Spotify.Error) => {
+      console.error(
+        '[Not-ify Web Playback Service] Account has to have Spotify Premium subscription',
+        message
+      );
+    });
+
+    player.addListener('playback_error', ({ message }: Spotify.Error) => {
+      console.error(
+        '[Not-ify Web Playback Service] Failed to perform playback',
+        message
+      );
+    });
 
     player.connect();
   }
