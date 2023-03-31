@@ -6,6 +6,7 @@ import { MatIconModule } from "@angular/material/icon";
 import { CommonModule, NgFor } from "@angular/common";
 import { exhaustMap, Observable, of } from "rxjs";
 import { MusicStore } from "src/app/home/data-access/music.store";
+import { MusicService } from "../data-access/music.service";
 import { SearchComponent } from "../ui/search/seach.component";
 import { SearchResultsComponent } from "../ui/search-result/search-results.component";
 import { TrackData } from "../data-access/track.model";
@@ -35,7 +36,8 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
           [trackUri]="trackUri" 
           [running]="running" 
           (playEvent)="playEvent($event)"
-          (pauseEvent)="pauseEvent()">
+          (pauseEvent)="pauseEvent()"
+          (repeatEvent)="repeatEvent()">
         </app-search-results>
       </div>
       <div class="flex-item">
@@ -45,8 +47,10 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
           [percentageComplete]="percentageComplete"
           [trackUri]="trackUri"
           [songCountDown]="songCountDown"
+          [trackTotalDuration]="trackTotalDuration"
           (playEvent)="playEvent($event)"
-          (pauseEvent)="pauseEvent()">
+          (pauseEvent)="pauseEvent()"
+          (seekEvent)="seekEvent($event)">
         </app-music-player-controls>
       </div>
     </div>
@@ -54,7 +58,6 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
   styleUrls: ["./home.component.css"],
 })
 export class HomeComponent implements AfterViewInit {
-  // TODO: fix interface and replace, do not use any
   tracks$: Observable<TrackData>;
   deviceId: string | null = null;
   trackUri: string | null = null;
@@ -65,8 +68,10 @@ export class HomeComponent implements AfterViewInit {
   startTimer: any;
   percentageComplete = 0;
   trackTotalDuration = 0;
+  player: Spotify.Player;
 
-  constructor(private http: HttpClient, private musicStore: MusicStore) {}
+
+  constructor(private http: HttpClient, private musicStore: MusicStore, private musicService: MusicService) {}
 
   ngAfterViewInit(): void {
     this.initPlaybackSDK();
@@ -94,6 +99,11 @@ export class HomeComponent implements AfterViewInit {
   stop(): void {
     clearInterval(this.startTimer);
     this.running = false;
+  }
+
+  seekEvent($event: string) {
+    // this.musicService.changeDuration(+$event, this.deviceId);
+    this.player?.seek(+$event);
   }
 
   // TODO: move to service?
@@ -154,13 +164,17 @@ export class HomeComponent implements AfterViewInit {
     player.addListener("not_ready", ({ device_id }: { device_id: string }) => {
       console.log("[Not-ify] Device ID has gone offline", device_id);
     });
-
+    this.player = player;
     await player.connect();
   }
 
   receiveSearch($event: string) {
     this.musicStore.getTracks($event);
     this.tracks$ = this.musicStore.loadTracks();
+  }
+
+  repeatEvent() {
+    this.musicService.repeatTrack();
   }
 
   // TODO: move to store
@@ -192,7 +206,6 @@ export class HomeComponent implements AfterViewInit {
       uris: [$event.uri],
       position_ms: this.duration,
     };
-
     this.http.put(url, body, { headers, params }).subscribe();
   }
 
@@ -224,9 +237,7 @@ export class HomeComponent implements AfterViewInit {
     });
 
     this.http.get<any>(url, { headers }).subscribe((data) => {
-      console.log("DEVICE DATA", data);
       this.deviceId = data.devices[0].id;
-      console.log("DEVICE ID", this.deviceId);
     });
   }
 
