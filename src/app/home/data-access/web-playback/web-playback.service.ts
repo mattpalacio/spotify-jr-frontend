@@ -1,6 +1,6 @@
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, first, from } from 'rxjs';
+import { BehaviorSubject, Observable, first, from } from 'rxjs';
 
 @Injectable()
 export class WebPlaybackService {
@@ -9,31 +9,31 @@ export class WebPlaybackService {
   private playerState$: BehaviorSubject<Spotify.PlaybackState> =
     new BehaviorSubject(null);
 
-  get player() {
+  get player(): Spotify.Player {
     return this.player$.getValue();
   }
 
-  get deviceId() {
+  get deviceId(): string {
     return this.deviceId$.getValue();
   }
 
-  get playerState() {
+  get playerState(): Spotify.PlaybackState {
     return this.playerState$.getValue();
   }
 
-  loadPlayer() {
+  loadPlayer(): Observable<Spotify.Player> {
     return this.player$.asObservable();
   }
 
-  loadDeviceId() {
+  loadDeviceId(): Observable<string> {
     return this.deviceId$.asObservable();
   }
 
-  loadPlayerState() {
+  loadPlayerState(): Observable<Spotify.PlaybackState> {
     return this.playerState$.asObservable();
   }
 
-  initWebPlayback() {
+  initWebPlayback(): void {
     from<Promise<void>>(
       new Promise((resolve) => {
         this.loadScript();
