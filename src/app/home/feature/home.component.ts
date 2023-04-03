@@ -1,11 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from 'src/app/header/feature/header.component';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule, NgFor } from '@angular/common';
-import { exhaustMap, Observable, of } from 'rxjs';
+import { exhaustMap, Observable, of, Subject, takeUntil } from 'rxjs';
 import { MusicStore } from 'src/app/home/data-access/music.store';
 import { WebPlaybackService } from '../data-access/web-playback/web-playback.service';
+import { WebPlaybackState } from '../data-access/web-playback/web-playback.model';
 
 @Component({
   selector: 'app-home',
@@ -87,19 +88,25 @@ import { WebPlaybackService } from '../data-access/web-playback/web-playback.ser
         <p>-{{ songCountDown | date : 'mm:ss' }}</p>
       </div>
       <div class="flex-container">
-        <button type="button" class="prev-btn" aria-label="search">
+        <button
+          type="button"
+          class="prev-btn"
+          aria-label="search"
+          (click)="prevTrack()"
+        >
           <mat-icon>skip_previous</mat-icon>
         </button>
         <button
           type="button"
           class="play-button-large"
-          *ngIf="!running"
           aria-label="play"
-          (click)="play(this.trackUri, songCountDown)"
+          (click)="bigPlay()"
         >
-          <mat-icon>play_arrow</mat-icon>
+          <mat-icon>
+            {{ isPlaying ? 'pause' : 'play_arrow' }}
+          </mat-icon>
         </button>
-        <button
+        <!-- <button
           type="button"
           class="play-button-large"
           *ngIf="running"
@@ -107,8 +114,13 @@ import { WebPlaybackService } from '../data-access/web-playback/web-playback.ser
           (click)="pause()"
         >
           <mat-icon>pause</mat-icon>
-        </button>
-        <button type="button" class="next_btn" aria-label="next track">
+        </button> -->
+        <button
+          type="button"
+          class="next_btn"
+          aria-label="next track"
+          (click)="nextTrack()"
+        >
           <mat-icon>skip_next</mat-icon>
         </button>
       </div>
@@ -116,7 +128,7 @@ import { WebPlaybackService } from '../data-access/web-playback/web-playback.ser
   `,
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   // TODO: fix interface and replace, do not use any
   tracks$: Observable<any>;
   deviceId: string | null = null;
@@ -128,6 +140,9 @@ export class HomeComponent implements OnInit {
   startTimer: any;
   percentageComplete = 0;
   trackTotalDuration = 0;
+  webPlaybackState: WebPlaybackState;
+  isPlaying = false;
+  private unsubsciber$: Subject<void> = new Subject();
 
   constructor(
     private webPlayback: WebPlaybackService,
@@ -137,6 +152,18 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.webPlayback.initWebPlayback();
+    this.webPlayback
+      .loadPlaybackState$()
+      .pipe(takeUntil(this.unsubsciber$))
+      .subscribe((state) => {
+        this.webPlaybackState = { ...state };
+        this.isPlaying = !state?.state?.paused;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubsciber$.next();
+    this.unsubsciber$.complete();
   }
 
   start(trackDuration: number): void {
@@ -186,7 +213,7 @@ export class HomeComponent implements OnInit {
     });
     const params = new HttpParams({
       fromObject: {
-        device_id: this.webPlayback.deviceId
+        device_id: this.webPlaybackState?.deviceId
       }
     });
     this.trackUri = uri;
@@ -201,6 +228,18 @@ export class HomeComponent implements OnInit {
     this.http.put(url, body, { headers, params }).subscribe();
   }
 
+  bigPlay() {
+    this.webPlayback.togglePlay();
+  }
+
+  nextTrack() {
+    this.webPlayback.nextTrack();
+  }
+
+  prevTrack() {
+    this.webPlayback.prevTrack();
+  }
+
   // TODO: move to store
   pause(): void {
     this.getCurrentlyPlaying();
@@ -212,7 +251,7 @@ export class HomeComponent implements OnInit {
     });
     const params = new HttpParams({
       fromObject: {
-        device_id: this.deviceId!
+        device_id: this.webPlaybackState?.deviceId
       }
     });
 

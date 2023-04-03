@@ -1,36 +1,69 @@
 ///  <reference types="@types/spotify-web-playback-sdk"/>
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, first, from } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  Subject,
+  defer,
+  first,
+  from,
+  fromEvent,
+  takeUntil,
+  tap
+} from 'rxjs';
+import { WebPlaybackState } from './web-playback.model';
 
 @Injectable()
 export class WebPlaybackService {
-  private player$: BehaviorSubject<Spotify.Player> = new BehaviorSubject(null);
-  private deviceId$: BehaviorSubject<string> = new BehaviorSubject(null);
-  private playerState$: BehaviorSubject<Spotify.PlaybackState> =
-    new BehaviorSubject(null);
+  private unsubscriber$: Subject<void> = new Subject();
+  private playbackState$: BehaviorSubject<WebPlaybackState> =
+    new BehaviorSubject({
+      player: null,
+      state: null,
+      deviceId: null,
+      volume: 1
+    });
 
-  get player(): Spotify.Player {
-    return this.player$.getValue();
+  private get playbackState() {
+    return this.playbackState$.getValue();
   }
 
-  get deviceId(): string {
-    return this.deviceId$.getValue();
+  togglePlay(): void {
+    defer(() => this.playbackState.player?.togglePlay())
+      .pipe(first())
+      .subscribe();
   }
 
-  get playerState(): Spotify.PlaybackState {
-    return this.playerState$.getValue();
+  seek(positionMs: number): void {
+    defer(() => this.playbackState.player?.seek(positionMs))
+      .pipe(first())
+      .subscribe();
   }
 
-  loadPlayer(): Observable<Spotify.Player> {
-    return this.player$.asObservable();
+  nextTrack(): void {
+    defer(() => this.playbackState.player?.nextTrack())
+      .pipe(first())
+      .subscribe();
   }
 
-  loadDeviceId(): Observable<string> {
-    return this.deviceId$.asObservable();
+  prevTrack(): void {
+    defer(() => this.playbackState.player?.previousTrack())
+      .pipe(first())
+      .subscribe();
   }
 
-  loadPlayerState(): Observable<Spotify.PlaybackState> {
-    return this.playerState$.asObservable();
+  setVolume(percentage: number) {
+    const volume = Number((percentage / 100).toFixed(2));
+
+    defer(() => this.playbackState.player?.setVolume(volume))
+      .pipe(first())
+      .subscribe(() =>
+        this.playbackState$.next({ ...this.playbackState, volume })
+      );
+  }
+
+  loadPlaybackState$(): Observable<WebPlaybackState> {
+    return this.playbackState$.asObservable();
   }
 
   initWebPlayback(): void {
@@ -40,15 +73,23 @@ export class WebPlaybackService {
         resolve();
       })
     )
-      .pipe(first())
+      .pipe(
+        first(),
+        tap(() => '[Not-ify Web Playback Service] Loading Spotify SDK script')
+      )
       .subscribe(() => {
         window.onSpotifyWebPlaybackSDKReady = () => this.connectPlayer();
       });
   }
 
-  private loadScript(): void {
-    console.log('[Not-ify Web Playback Service] Loading Spotify SDK script');
+  // Clean up method
+  disconnectPlayer() {
+    this.unsubscriber$.next();
+    this.unsubscriber$.complete();
+    this.playbackState.player.disconnect();
+  }
 
+  private loadScript(): void {
     const node = document.createElement('script');
     node.src = 'https://sdk.scdn.co/spotify-player.js';
     node.async = true;
@@ -67,70 +108,93 @@ export class WebPlaybackService {
 
         cb(accessToken);
       },
-      volume: 1
+      volume: this.playbackState.volume
     });
 
-    this.player$.next(player);
+    this.addPlayerListeners(player);
+    this.addErrorListeners(player);
 
-    player.addListener(
-      'ready',
-      ({ device_id }: Spotify.WebPlaybackInstance) => {
+    defer(() => player.connect())
+      .pipe(
+        first(),
+        tap(() =>
+          console.log(
+            '[Not-ify Web Playback Service] The Web Playback SDK successfully connected to Spotify!'
+          )
+        )
+      )
+      .subscribe();
+
+    this.playbackState$.next({ ...this.playbackState, player });
+  }
+
+  private addPlayerListeners(player: Spotify.Player): void {
+    fromEvent(player, 'ready')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ device_id }: Spotify.WebPlaybackInstance) => {
         console.log(
           '[Not-ify Web Playback Service] Ready with Device ID',
           device_id
         );
 
-        this.deviceId$.next(device_id);
-      }
-    );
+        this.playbackState$.next({
+          ...this.playbackState,
+          deviceId: device_id
+        });
+      });
 
-    player.addListener(
-      'player_state_changed',
-      (state: Spotify.PlaybackState) => {
+    fromEvent(player, 'player_state_changed')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe((state: Spotify.PlaybackState) => {
         if (!state) return;
+        this.playbackState$.next({ ...this.playbackState, state });
+      });
 
-        this.playerState$.next(state);
-      }
-    );
-
-    player.addListener(
-      'not_ready',
-      ({ device_id }: Spotify.WebPlaybackInstance) => {
+    fromEvent(player, 'not_ready')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ device_id }: Spotify.WebPlaybackInstance) => {
         console.log(
           '[Not-ify Web Playback Service] Device ID has gone offline',
           device_id
         );
-      }
-    );
+      });
+  }
 
-    player.addListener('initialization_error', ({ message }: Spotify.Error) => {
-      console.error(
-        '[Not-ify Web Playback Service] Failed to initialize',
-        message
-      );
-    });
+  private addErrorListeners(player: Spotify.Player): void {
+    fromEvent(player, 'initialization_error')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ message }: Spotify.Error) => {
+        console.error(
+          '[Not-ify Web Playback Service] Failed to initialize',
+          message
+        );
+      });
 
-    player.addListener('authentication_error', ({ message }: Spotify.Error) => {
-      console.error(
-        '[Not-ify Web Playback Service] Failed to authenticate',
-        message
-      );
-    });
+    fromEvent(player, 'authentication_error')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ message }: Spotify.Error) => {
+        console.error(
+          '[Not-ify Web Playback Service] Failed to authenticate',
+          message
+        );
+      });
 
-    player.addListener('account_error', ({ message }: Spotify.Error) => {
-      console.error(
-        '[Not-ify Web Playback Service] Account has to have Spotify Premium subscription',
-        message
-      );
-    });
+    fromEvent(player, 'account_error')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ message }: Spotify.Error) => {
+        console.error(
+          '[Not-ify Web Playback Service] Account has to have Spotify Premium subscription',
+          message
+        );
+      });
 
-    player.addListener('playback_error', ({ message }: Spotify.Error) => {
-      console.error(
-        '[Not-ify Web Playback Service] Failed to perform playback',
-        message
-      );
-    });
-
-    player.connect();
+    fromEvent(player, 'playback_error')
+      .pipe(takeUntil(this.unsubscriber$))
+      .subscribe(({ message }: Spotify.Error) => {
+        console.error(
+          '[Not-ify Web Playback Service] Failed to perform playback',
+          message
+        );
+      });
   }
 }
