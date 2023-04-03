@@ -51,7 +51,11 @@ import { MatIconModule } from "@angular/material/icon";
         <mat-icon>pause</mat-icon>
       </button>
       <!-- next button -->
-      <button type="button" class="next_btn" aria-label="next track">
+      <button 
+        type="button" 
+        class="next_btn" 
+        aria-label="next track"
+        (click)="nextTrack()">
         <mat-icon>skip_next</mat-icon>
       </button>
       <!-- repeat button -->
@@ -67,6 +71,7 @@ export class MusicPlayerControlsComponent {
   @Output() pauseEvent = new EventEmitter<string>();
   @Output() repeatTrackEvent = new EventEmitter<string>();
   @Output() seekEvent = new EventEmitter<string>();
+  @Output() nextTrackEvent = new EventEmitter<string>();
   @Input() running: boolean;
   @Input() duration: number;
   @Input() trackTotalDuration: number;
@@ -90,6 +95,10 @@ export class MusicPlayerControlsComponent {
   getValue(value: string) {
     this.seekEvent.emit(value);
     console.log(value);
+  }
+
+  nextTrack() {
+    this.nextTrackEvent.emit();
   }
   
 }

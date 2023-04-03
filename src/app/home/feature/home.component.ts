@@ -50,7 +50,8 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
           [trackTotalDuration]="trackTotalDuration"
           (playEvent)="playEvent($event)"
           (pauseEvent)="pauseEvent()"
-          (seekEvent)="seekEvent($event)">
+          (seekEvent)="seekEvent($event)"
+          (nextTrack)="nextTrackEvent()">
         </app-music-player-controls>
       </div>
     </div>
@@ -102,8 +103,22 @@ export class HomeComponent implements AfterViewInit {
   }
 
   seekEvent($event: string) {
-    // this.musicService.changeDuration(+$event, this.deviceId);
     this.player?.seek(+$event);
+    this.songCountDown = this.trackTotalDuration - +$event;
+    this.duration = +$event;
+  }
+
+  receiveSearch($event: string) {
+    this.musicStore.getTracks($event);
+    this.tracks$ = this.musicStore.loadTracks();
+  }
+
+  repeatEvent() {
+    this.musicService.repeatTrack();
+  }
+
+  nextTrackEvent() {
+    this.player?.nextTrack();
   }
 
   // TODO: move to service?
@@ -166,15 +181,6 @@ export class HomeComponent implements AfterViewInit {
     });
     this.player = player;
     await player.connect();
-  }
-
-  receiveSearch($event: string) {
-    this.musicStore.getTracks($event);
-    this.tracks$ = this.musicStore.loadTracks();
-  }
-
-  repeatEvent() {
-    this.musicService.repeatTrack();
   }
 
   // TODO: move to store
