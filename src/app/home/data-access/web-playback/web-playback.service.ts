@@ -24,7 +24,7 @@ export class WebPlaybackService {
       volume: 1
     });
 
-  private get playbackState() {
+  private get playbackState(): WebPlaybackState {
     return this.playbackState$.getValue();
   }
 
@@ -52,7 +52,7 @@ export class WebPlaybackService {
       .subscribe();
   }
 
-  setVolume(percentage: number) {
+  setVolume(percentage: number): void {
     const volume = Number((percentage / 100).toFixed(2));
 
     defer(() => this.playbackState.player?.setVolume(volume))
@@ -83,7 +83,7 @@ export class WebPlaybackService {
   }
 
   // Clean up method
-  disconnectPlayer() {
+  disconnectPlayer(): void {
     this.unsubscriber$.next();
     this.unsubscriber$.complete();
     this.playbackState.player.disconnect();
