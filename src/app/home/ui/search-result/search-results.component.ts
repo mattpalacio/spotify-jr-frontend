@@ -17,7 +17,7 @@ import { TrackData } from "../../data-access/track.model";
                   type="button"
                   class="play-button-small"
                   aria-label="play"
-                  (click)="play(track.uri, track.duration_ms, track.album.uri)"
+                  (click)="play(track.uri, track.duration_ms)"
                 >
                   <mat-icon>play_circle_filled</mat-icon>
                 </button>
@@ -55,7 +55,7 @@ import { TrackData } from "../../data-access/track.model";
         this.pauseEvent.emit();
     }
 
-    play(uri: string, durationMs: number, abulmUri: string ) {
+    play(uri: string, durationMs: number)  {
         this.playEvent.emit({uri: uri, duration: durationMs});
     }
   }

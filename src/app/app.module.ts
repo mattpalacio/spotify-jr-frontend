@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthGaurdService } from './login/data-access/auth-gaurd.service';
+import { AuthGuardService } from './login/data-access/auth-guard.service';
 import { MusicService } from './home/data-access/music.service';
 import { WebPlaybackService } from './home/data-access/web-playback/web-playback.service';
 
@@ -14,7 +14,7 @@ import { WebPlaybackService } from './home/data-access/web-playback/web-playback
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [
     CookieService,
-    AuthGaurdService,
+    AuthGuardService,
     MusicService,
     WebPlaybackService
   ],

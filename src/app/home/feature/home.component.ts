@@ -128,7 +128,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   seekEvent($event: string) {
-    this.player?.seek(+$event);
+    this.webPlayback.seek(+$event);
     this.songCountDown = this.trackTotalDuration - +$event;
     this.duration = +$event;
   }
@@ -146,72 +146,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.player?.nextTrack();
   }
 
-  // TODO: move to service?
-  // async initPlaybackSDK() {
-  //   const accessToken = JSON.parse(
-  //     localStorage.getItem("auth_data")!
-  //   ).access_token;
-  //   const { Player } = await this.waitForSpotifyWebPlaybackSDKToLoad();
-
-  //   const player = new Player({
-  //     name: "Not-ify Web Player",
-  //     getOAuthToken: (cb: any) => {
-  //       cb(accessToken);
-  //     },
-  //     volume: 1,
-  //   });
-
-  //   player.addListener(
-  //     "initialization_error",
-  //     ({ message }: { message: string }) => {
-  //       console.error(message);
-  //     }
-  //   );
-
-  //   player.addListener(
-  //     "authentication_error",
-  //     ({ message }: { message: string }) => {
-  //       console.error(message);
-  //     }
-  //   );
-
-  //   player.addListener("account_error", ({ message }: { message: string }) => {
-  //     console.error(message);
-  //   });
-
-  //   player.addListener("playback_error", ({ message }: { message: string }) => {
-  //     alert(
-  //       `Your account has to have Spotify Premium for playing music ${message}`
-  //     );
-  //   });
-
-  //   player.addListener(
-  //     "player_state_changed",
-
-  //     (state: Spotify.PlaybackState) => {
-  //       this.getCurrentlyPlaying();
-  //     }
-  //   );
-
-  //   player.addListener("ready", ({ device_id }: { device_id: string }) => {
-  //     console.log("[Not-ify] Ready with Device ID", device_id);
-
-  //     this.deviceId = device_id;
-
-  //     this.transfer(device_id);
-  //   });
-
-  //   player.addListener("not_ready", ({ device_id }: { device_id: string }) => {
-  //     console.log("[Not-ify] Device ID has gone offline", device_id);
-  //   });
-  //   this.player = player;
-  //   await player.connect();
-  // }
-
   // TODO: move to store
   playEvent($event): void {
     // if user clicked a new track, reset durations and progress bar
-    if (this.trackUri == null || this.trackUri != uri) {
     if (this.trackUri == null || this.trackUri != $event.uri) {
       this.songCountDown = 0;
       this.duration = 0;
@@ -235,13 +172,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.start($event.duration);
 
     const body = {
-      offset: {uri: this.trackUri},
-      position_ms: this.duration,
-      context_uri: {context_uri: $event.context_uri}
+      uris: [$event.uri],
+      position_ms: this.duration
 
     };
     this.http.put(url, body, { headers, params }).subscribe();
-  }
 }
 
   bigPlay() {
