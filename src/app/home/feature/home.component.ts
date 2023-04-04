@@ -209,8 +209,10 @@ export class HomeComponent implements AfterViewInit {
     this.start($event.duration);
 
     const body = {
-      uris: [$event.uri],
+      offset: {uri: this.trackUri},
       position_ms: this.duration,
+      context_uri: {context_uri: $event.context_uri}
+
     };
     this.http.put(url, body, { headers, params }).subscribe();
   }

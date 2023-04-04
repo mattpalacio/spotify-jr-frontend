@@ -12,12 +12,6 @@ import { MatIconModule } from "@angular/material/icon";
       <div>
         <input (change)="getValue(trackProgress.value)" #trackProgress class="range" type="range" min="0" max="{{trackTotalDuration}}" step="1" value="{{duration}}">
         </div>
-      <!-- <div class="progress-bar">
-        <div
-          [style.width.%]="percentageComplete"
-          class="progress-bar-inside"
-        ></div>
-      </div> -->
       <p>-{{ songCountDown | date : "mm:ss" }}</p>
     </div>
 
@@ -94,7 +88,6 @@ export class MusicPlayerControlsComponent {
 
   getValue(value: string) {
     this.seekEvent.emit(value);
-    console.log(value);
   }
 
   nextTrack() {

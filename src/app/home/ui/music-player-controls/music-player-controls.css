@@ -32,23 +32,13 @@
     cursor: pointer;
   }
   
-  .progress-bar {
-    background-color: white;
-    width: 20em;
-    height: 5px;
-    border-radius: 25px;
-    margin: 23px;
-    position: relative;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  }
-  
-  .progress-bar-inside {
-    background-color: #44365d;
-    position: absolute;
-    height: 5px;
-    border-radius: 25px;
-  }
-  
   .range {
     width: 20em;
+    margin: 1.3em;
+    accent-color: #44365d;
+  }
+
+  .range:hover {
+    accent-color: #35284b;
+    cursor: pointer;
   }

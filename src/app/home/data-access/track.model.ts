@@ -27,6 +27,7 @@ export interface Items {
 export interface Album {
     artists: Artists [];
     images: Image[];
+    uri: string;
 }
 
 export interface Artists {
