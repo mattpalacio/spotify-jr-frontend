@@ -12,6 +12,7 @@ import {
   tap
 } from 'rxjs';
 import { WebPlaybackState } from './web-playback.model';
+import { TokenStorageService } from 'src/app/login/data-access/token-storage/token-storage.service';
 
 @Injectable()
 export class WebPlaybackService {
@@ -23,6 +24,8 @@ export class WebPlaybackService {
       deviceId: null,
       volume: 1
     });
+
+  constructor(private tokenStorage: TokenStorageService) {}
 
   private get playbackState(): WebPlaybackState {
     return this.playbackState$.getValue();
@@ -101,12 +104,7 @@ export class WebPlaybackService {
     const player = new window.Spotify.Player({
       name: 'Not-ify Web Player',
       getOAuthToken: (cb) => {
-        // TODO: Get token from auth service
-        const accessToken = JSON.parse(
-          localStorage.getItem('auth_data')
-        ).access_token;
-
-        cb(accessToken);
+        cb(this.tokenStorage.getAuthData().access_token);
       },
       volume: this.playbackState.volume
     });
