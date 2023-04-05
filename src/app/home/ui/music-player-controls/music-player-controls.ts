@@ -69,7 +69,6 @@ export class MusicPlayerControlsComponent {
   @Input() running: boolean;
   @Input() duration: number;
   @Input() trackTotalDuration: number;
-  @Input() percentageComplete: number;
   @Input() trackUri: string;
   @Input() songCountDown: number;
 

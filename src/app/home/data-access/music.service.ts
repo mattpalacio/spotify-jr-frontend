@@ -25,8 +25,8 @@ export class MusicService {
     return this.http.get<TrackData>(url, { headers, params });
   }
 
-  repeatTrack() {
-    const url = "http://127.0.0.1:8000/player/repeat";
+  repeatTrack(deviceId: string, repeatState: string) {
+    const url = "https://api.spotify.com/v1/me/player/repeat";
 
     const headers = new HttpHeaders({
       Authorization:
@@ -34,10 +34,11 @@ export class MusicService {
     });
     const params = new HttpParams({
       fromObject: {
-        state: "track",
+        state: repeatState,
+        device_id: deviceId
       },
     });
-    return this.http.put(url, { headers, params }).subscribe();
+    return this.http.put(url, {}, { headers, params });
   }
 
   changeDuration(duration: number, deviceId: string) {

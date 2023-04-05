@@ -7,10 +7,11 @@ import { exhaustMap, Observable, of, Subject, takeUntil } from 'rxjs';
 import { MusicStore } from 'src/app/home/data-access/music.store';
 import { WebPlaybackService } from '../data-access/web-playback/web-playback.service';
 import { WebPlaybackState } from '../data-access/web-playback/web-playback.model';
-import { SearchComponent } from "../ui/search/seach.component";
+import { SearchComponent } from "../ui/search/search.component";
 import { SearchResultsComponent } from "../ui/search-result/search-results.component";
 import { TrackData } from "../data-access/track.model";
 import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-player-controls";
+import { MusicService } from '../data-access/music.service';
 
 @Component({
   selector: "app-home",
@@ -36,22 +37,21 @@ import { MusicPlayerControlsComponent } from "../ui/music-player-controls/music-
           [trackUri]="trackUri" 
           [running]="running" 
           (playEvent)="playEvent($event)"
-          (pauseEvent)="pauseEvent()"
-          (repeatEvent)="repeatEvent()">
+          (pauseEvent)="pauseEvent()">
         </app-search-results>
       </div>
       <div class="flex-item">
         <app-music-player-controls 
           [running]="running" 
           [duration]="duration" 
-          [percentageComplete]="percentageComplete"
           [trackUri]="trackUri"
           [songCountDown]="songCountDown"
           [trackTotalDuration]="trackTotalDuration"
           (playEvent)="playEvent($event)"
           (pauseEvent)="pauseEvent()"
           (seekEvent)="seekEvent($event)"
-          (nextTrack)="nextTrackEvent()">
+          (nextTrack)="nextTrackEvent()"
+          (repeatTrackEvent)="repeatEvent()">>
         </app-music-player-controls>
       </div>
     </div>
@@ -63,23 +63,23 @@ export class HomeComponent implements OnInit, OnDestroy {
   deviceId: string | null = null;
   trackUri: string | null = null;
   running: boolean;
+  repeat = false;
   trackProgress = 0;
   songCountDown = 0;
   duration = 0;
   startTimer: any;
-  percentageComplete = 0;
   trackTotalDuration = 0;
   player: Spotify.Player;
 
   webPlaybackState: WebPlaybackState;
   isPlaying = false;
   private unsubsciber$: Subject<void> = new Subject();
-  musicService: any;
 
   constructor(
     private webPlayback: WebPlaybackService,
     private http: HttpClient,
-    private musicStore: MusicStore
+    private musicStore: MusicStore,
+    private musicService: MusicService
   ) {}
 
   ngOnInit(): void {
@@ -104,11 +104,9 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.startTimer = setInterval(() => {
         this.songCountDown = this.songCountDown - 1000;
         this.duration = this.duration + 1000;
-        this.percentageComplete = (this.duration / trackDuration) * 100;
         if (this.duration > trackDuration) {
           this.duration = 0;
           this.songCountDown = 0;
-          this.percentageComplete = 0;
           this.stop();
         }
       }, 1000);
@@ -120,6 +118,11 @@ export class HomeComponent implements OnInit, OnDestroy {
   stop(): void {
     clearInterval(this.startTimer);
     this.running = false;
+    if(this.songCountDown <= 0 && this.repeat === true){
+      this.songCountDown = this.trackTotalDuration;
+      console.log(this.songCountDown, "song countdown");
+      this.start(this.trackTotalDuration);
+    }
   }
 
   search(trackName: string) {
@@ -139,7 +142,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   repeatEvent() {
-    this.musicService.repeatTrack();
+    this.repeat = !this.repeat;
+    this.musicService.repeatTrack(this.webPlaybackState?.deviceId, this.repeat === true ? "track" : "off").subscribe();
   }
 
   nextTrackEvent() {
@@ -152,7 +156,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.trackUri == null || this.trackUri != $event.uri) {
       this.songCountDown = 0;
       this.duration = 0;
-      this.percentageComplete = 0;
       this.trackTotalDuration = $event.duration;
       this.stop();
     }
@@ -239,7 +242,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.http.put(url, body, { headers }).subscribe();
   }
 
-  // TODO: move to store
   getCurrentlyPlaying(): void {
     const url = 'http://127.0.0.1:8000/player/currently-playing';
     const headers = new HttpHeaders({
@@ -257,11 +259,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 }
 
-// function bigPlay() {
-//   throw new Error('Function not implemented.');
-// }
-
-// function prevTrack() {
-//   throw new Error('Function not implemented.');
-// }
 
