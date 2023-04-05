@@ -120,7 +120,6 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.running = false;
     if(this.songCountDown <= 0 && this.repeat === true){
       this.songCountDown = this.trackTotalDuration;
-      console.log(this.songCountDown, "song countdown");
       this.start(this.trackTotalDuration);
     }
   }
