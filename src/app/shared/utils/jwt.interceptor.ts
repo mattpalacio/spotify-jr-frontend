@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
+  HTTP_INTERCEPTORS,
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment.development';
 import { TokenStorageService } from 'src/app/login/data-access/token-storage/token-storage.service';
 
@@ -35,7 +36,11 @@ export class JwtInterceptor implements HttpInterceptor {
     }
 
     return next.handle(req);
-
-    // return of(localStorage.getItem('auth_data'))
   }
 }
+
+export const JwtInterceptorProvider = {
+  provide: HTTP_INTERCEPTORS,
+  useClass: JwtInterceptor,
+  multi: true
+};
