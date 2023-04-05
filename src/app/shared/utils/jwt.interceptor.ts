@@ -19,18 +19,12 @@ export class JwtInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const auth = this.tokenStorage.getAuthData();
-    console.log('AUTH', auth);
-
-    if (!auth) return next.handle(req);
-
-    const token = auth?.access_token;
     const isApiUrl = req.url.startsWith(environment.apiUrl);
-    console.log('REQUEST', req);
 
-    if (token && isApiUrl) {
+    if (auth && isApiUrl) {
       req = req.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + token
+          Authorization: `${auth.token_type} ${auth.access_token}`
         }
       });
     }

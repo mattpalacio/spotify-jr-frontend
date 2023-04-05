@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AuthStore } from '../../login/data-access/auth.store';
 import { AuthService } from 'src/app/login/data-access/auth.service';
 import { Router } from '@angular/router';
 
@@ -32,14 +31,9 @@ import { Router } from '@angular/router';
   ]
 })
 export class HeaderComponent {
-  constructor(
-    private authStore: AuthStore,
-    private router: Router,
-    private auth: AuthService
-  ) {}
+  constructor(private router: Router, private auth: AuthService) {}
 
   logout() {
-    // this.authStore.logout();
     this.auth.logout();
     this.router.navigateByUrl('/');
   }
