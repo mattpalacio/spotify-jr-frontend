@@ -207,10 +207,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
 
     const url = 'http://127.0.0.1:8000/player/play';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    // const headers = new HttpHeaders({
+    //   Authorization:
+    //     'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
+    // });
     const params = new HttpParams({
       fromObject: {
         device_id: this.webPlaybackState?.deviceId
@@ -225,7 +225,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       position_ms: this.duration
     };
 
-    this.http.put(url, body, { headers, params }).subscribe();
+    this.http.put(url, body, { params }).subscribe();
   }
 
   bigPlay() {
