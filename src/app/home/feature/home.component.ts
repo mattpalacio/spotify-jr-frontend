@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HeaderComponent } from 'src/app/header/feature/header.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -7,6 +7,7 @@ import { exhaustMap, Observable, of, Subject, takeUntil } from 'rxjs';
 import { MusicStore } from 'src/app/home/data-access/music.store';
 import { WebPlaybackService } from '../data-access/web-playback/web-playback.service';
 import { WebPlaybackState } from '../data-access/web-playback/web-playback.model';
+import { environment } from 'src/environments/environment.development';
 
 @Component({
   selector: 'app-home',
@@ -206,11 +207,8 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.stop();
     }
 
-    const url = 'http://127.0.0.1:8000/player/play';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    const url = environment.apiUrl + '/player/play';
+
     const params = new HttpParams({
       fromObject: {
         device_id: this.webPlaybackState?.deviceId
@@ -225,7 +223,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       position_ms: this.duration
     };
 
-    this.http.put(url, body, { headers, params }).subscribe();
+    this.http.put(url, body, { params }).subscribe();
   }
 
   bigPlay() {
@@ -244,11 +242,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   pause(): void {
     this.getCurrentlyPlaying();
 
-    const url = 'http://127.0.0.1:8000/player/pause';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    const url = environment.apiUrl + '/player/pause';
+
     const params = new HttpParams({
       fromObject: {
         device_id: this.webPlaybackState?.deviceId
@@ -256,18 +251,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
 
     this.stop();
-    this.http.put(url, {}, { headers, params }).subscribe();
+    this.http.put(url, {}, { params }).subscribe();
   }
 
   // TODO: move to store
   getDevices(): void {
-    const url = 'http://127.0.0.1:8000/player/devices';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    const url = environment.apiUrl + '/player/devices';
 
-    this.http.get<any>(url, { headers }).subscribe((data) => {
+    this.http.get<any>(url).subscribe((data) => {
       console.log('DEVICE DATA', data);
       this.deviceId = data.devices[0].id;
       console.log('DEVICE ID', this.deviceId);
@@ -276,29 +267,22 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // TODO: move to store
   transfer(deviceId: string): void {
-    const url = 'http://127.0.0.1:8000/player';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    const url = environment.apiUrl + '/player';
+
     const body = {
       device_ids: [deviceId],
       play: true
     };
 
-    this.http.put(url, body, { headers }).subscribe();
+    this.http.put(url, body).subscribe();
   }
 
   // TODO: move to store
   getCurrentlyPlaying(): void {
-    const url = 'http://127.0.0.1:8000/player/currently-playing';
-    const headers = new HttpHeaders({
-      Authorization:
-        'Bearer ' + JSON.parse(localStorage.getItem('auth_data')!).access_token
-    });
+    const url = environment.apiUrl + '/player/currently-playing';
 
     this.http
-      .get<any>(url, { headers })
+      .get<any>(url)
       .pipe(exhaustMap((data) => of(data)))
       .subscribe((data) => {
         this.trackUri = data.item.uri;

@@ -1,8 +1,9 @@
-import { Component } from "@angular/core";
-import { AuthStore } from "../../auth/data-access/auth.store";
+import { Component } from '@angular/core';
+import { AuthService } from 'src/app/login/data-access/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: "app-header",
+  selector: 'app-header',
   standalone: true,
   template: `
     <nav class="nav" aria-labelledby="mainmenulabel">
@@ -21,18 +22,19 @@ import { AuthStore } from "../../auth/data-access/auth.store";
     </nav>
   `,
   styles: [
-    ".nav { padding: 5px;}",
-    ".logo {width: 150px;}",
-    ".nav-menu-items {list-style-type: none; display: flex; align-items: center; flex-direction: row; justify-content: flex-end; color: white; font-family: Arial, Helvetica, sans-serif;}",
-    ".left {margin-right: auto }",
-    ".right {padding:  0 10px}",
-    ".right:hover { cursor: pointer}"
-  ],
+    '.nav { padding: 5px;}',
+    '.logo {width: 150px;}',
+    '.nav-menu-items {list-style-type: none; display: flex; align-items: center; flex-direction: row; justify-content: flex-end; color: white; font-family: Arial, Helvetica, sans-serif;}',
+    '.left {margin-right: auto }',
+    '.right {padding:  0 10px}',
+    '.right:hover { cursor: pointer}'
+  ]
 })
 export class HeaderComponent {
-  constructor(private authStore: AuthStore){}
+  constructor(private router: Router, private auth: AuthService) {}
 
-  logout(){
-    this.authStore.logout();
+  logout() {
+    this.auth.logout();
+    this.router.navigateByUrl('/');
   }
 }
