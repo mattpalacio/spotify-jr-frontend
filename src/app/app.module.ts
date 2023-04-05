@@ -5,18 +5,24 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CookieService } from 'ngx-cookie-service';
-import { AuthGuardService } from './login/data-access/auth-guard.service';
+import { AuthGaurdService } from './login/data-access/auth-gaurd.service';
 import { MusicService } from './home/data-access/music.service';
 import { WebPlaybackService } from './home/data-access/web-playback/web-playback.service';
+import { JwtInterceptorProvider } from './shared/utils/jwt.interceptor';
+import { AuthService } from './login/data-access/auth.service';
+import { TokenStorageService } from './login/data-access/token-storage/token-storage.service';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, AppRoutingModule, HttpClientModule],
   providers: [
+    JwtInterceptorProvider,
     CookieService,
-    AuthGuardService,
+    AuthGaurdService,
     MusicService,
-    WebPlaybackService
+    WebPlaybackService,
+    AuthService,
+    TokenStorageService
   ],
   bootstrap: [AppComponent]
 })

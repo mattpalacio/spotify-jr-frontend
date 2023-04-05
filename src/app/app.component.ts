@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { exhaustMap, of } from 'rxjs';
-import { Auth } from './login/data-access/auth.model';
-import { AuthStore } from './login/data-access/auth.store';
+import { EMPTY, catchError, filter, of, switchMap, take } from 'rxjs';
+import { AuthService } from './login/data-access/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -11,25 +9,20 @@ import { AuthStore } from './login/data-access/auth.store';
   styles: []
 })
 export class AppComponent implements OnInit {
-  constructor(private http: HttpClient, private router: Router, private auth: AuthStore) {}
+  constructor(
+    private router: Router,
+
+    private auth: AuthService
+  ) {}
 
   ngOnInit(): void {
-    const code = new URLSearchParams(window.location.search).get('code');
-
-    if (code) {
-      const url = 'http://127.0.0.1:8000/login?code=' + code;
-
-      this.http
-        .get<Auth>(url)
-        .pipe(
-          exhaustMap((data) => of(data)))
-        .subscribe({
-          next: (data) => {
-            this.auth.storeAuth(data);
-          },
-          error: () => this.router.navigateByUrl('/login'),
-          complete: () => this.router.navigateByUrl('/home')
-        });
-    }
+    of(new URLSearchParams(window.location.search).get('code'))
+      .pipe(
+        catchError(() => EMPTY),
+        filter((code) => code !== null),
+        take(1),
+        switchMap((code) => this.auth.login$(code))
+      )
+      .subscribe(() => this.router.navigateByUrl('/home'));
   }
 }
